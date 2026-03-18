@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vagabond PDF Exporter - Bookmarklet</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      padding: 30px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    h1 { color: #c8b420; font-size: 22px; margin-bottom: 6px; }
+    h2 { color: #c8b420; font-size: 16px; margin: 20px 0 8px; }
+    p { color: #aaa; font-size: 14px; line-height: 1.6; margin-bottom: 10px; }
+    .step {
+      background: #16213e;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      border-left: 3px solid #c8b420;
+    }
+    .step-num {
+      color: #c8b420;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    .step p { margin: 0; color: #ccc; }
+    code {
+      background: #0f3460;
+      border: 1px solid #2a4a7a;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: monospace;
+      font-size: 13px;
+      color: #86efac;
+    }
+    .console-block {
+      background: #0a0a1a;
+      border: 1px solid #2a4a7a;
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-family: monospace;
+      font-size: 12px;
+      color: #86efac;
+      white-space: pre-wrap;
+      word-break: break-all;
+      cursor: pointer;
+      position: relative;
+      margin: 8px 0;
+    }
+    .console-block::after {
+      content: "Click to copy";
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 10px;
+      color: #555;
+      font-family: sans-serif;
+    }
+    .console-block:hover::after { color: #c8b420; }
+    .copied::after { content: "Copied!" !important; color: #86efac !important; }
+    .note {
+      background: #16213e;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #888;
+      margin-top: 16px;
+    }
+    .note strong { color: #c8b420; }
+  </style>
+</head>
+<body>
+  <h1>⚔ Vagabond PDF Exporter</h1>
+  <p>Automatically reads your character from the Vagabond extension and exports it to the official Hero Record PDF.</p>
+
+  <h2>How to use</h2>
+
+  <div class="step">
+    <div class="step-num">Step 1</div>
+    <p>Open OBR with your room and make sure the <strong>Vagabond extension</strong> is open with your character loaded.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-num">Step 2</div>
+    <p>Right-click anywhere on the <strong>Vagabond character sheet</strong> panel and click <strong>Inspect</strong> (or press F12 and select the Vagabond iframe in the devtools).</p>
+  </div>
+
+  <div class="step">
+    <div class="step-num">Step 3</div>
+    <p>Click the <strong>Console</strong> tab in DevTools, then copy and paste the script below and press Enter:</p>
+    <div class="console-block" id="script-block" onclick="copyScript(this)"></div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">Step 4</div>
+    <p>If you have multiple characters, a small prompt will ask which one to export. The filled PDF will download automatically.</p>
+  </div>
+
+  <div class="note">
+    <strong>Note:</strong> This script only reads data from your browser's localStorage — it does not send any data anywhere. The PDF is generated entirely in your browser.
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script>
+    // The console script (will be injected into the page as text)
+    const CONSOLE_SCRIPT = `(async () => {
+  // Load pdf-lib
+  const script = document.createElement('script');
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js';
+  document.head.appendChild(script);
+  await new Promise(r => script.onload = r);
+
+  // Read character data
+  const raw = localStorage.getItem('vagabond-saved-characters');
+  if (!raw) { alert('No Vagabond characters found in localStorage.'); return; }
+  const chars = JSON.parse(raw);
+  if (!chars.length) { alert('No characters saved.'); return; }
+
+  // Pick character if multiple
+  let char = chars[0];
+  if (chars.length > 1) {
+    const names = chars.map((c, i) => i + ': ' + c.name).join('\\n');
+    const idx = parseInt(prompt('Multiple characters found:\\n' + names + '\\n\\nEnter number:'));
+    if (isNaN(idx) || idx < 0 || idx >= chars.length) { alert('Invalid selection.'); return; }
+    char = chars[idx];
+  }
+
+  // Fetch blank PDF
+  const res = await fetch('https://dimitroffvodka.github.io/vagabond-pdf-exporter/blank.pdf');
+  if (!res.ok) { alert('Could not load blank PDF from GitHub Pages. Make sure blank.pdf is in the repo.'); return; }
+  const pdfBytes = await res.arrayBuffer();
+  const { PDFDocument } = PDFLib;
+  const pdfDoc = await PDFDocument.load(pdfBytes);
+  const form = pdfDoc.getForm();
+
+  function sf(name, val) {
+    try { form.getTextField(name).setText(String(val ?? '')); } catch(e) {}
+  }
+  function sc(name, val) {
+    try { val ? form.getCheckBox(name).check() : form.getCheckBox(name).uncheck(); } catch(e) {}
+  }
+  function sd(name, val) {
+    try { form.getDropdown(name).select(String(val)); } catch(e) {}
+  }
+
+  const s = char.stats || {};
+  const t = char.training || {};
+
+  // Identity
+  sf('Name', char.name);
+  sf('Level', char.level);
+  sf('XP', char.xp);
+  sf('Ancestry', char.ancestry);
+  sf('Class', char.class);
+  sf('Speed', char.speed);
+  sf('Speed Bonus', char.speedBonus || '');
+  try { sd('Size', char.size || 'M'); } catch(e) {}
+
+  // Stats (reason -> LOG in PDF)
+  sf('MIT', s.might);
+  sf('DEX', s.dexterity);
+  sf('AWR', s.awareness);
+  sf('LOG', s.reason);
+  sf('PRS', s.presence);
+  sf('LUK', s.luck);
+
+  // Resources
+  sf('Current HP', char.currentHP);
+  sf('Max HP', char.maxHP);
+  sf('Armor Rating', char.armor);
+  sf('Current Mana', char.currentMana);
+  sf('Max Mana', char.maxMana);
+  sf('Casting Maximum', char.maxCastingMana);
+  sf('Current Luck', char.currentLuck);
+  sf('Max Luck', char.maxLuck || s.luck);
+  sf('Fatigue', char.fatigue);
+
+  // Skills
+  const skillMap = {
+    arcana:      ['Arcana Trained',      'Arcana Skill Difficulty'],
+    brawl:       ['Brawn Trained',        'Brawn Skill Difficulty'],
+    craft:       ['Craft Trained',        'Craft Skill Difficulty'],
+    detect:      ['Detect Trained',       'Detect Skill Difficulty'],
+    finesse:     ['Finesse Trained',      'Finesse Skill Difficulty'],
+    influence:   ['Influence Trained',    'Influence Skill Difficulty'],
+    leadership:  ['Leadership Trained',   'Leadership Skill Difficulty'],
+    medicine:    ['Medicine Trained',     'Medicine Skill Difficulty'],
+    mysticism:   ['Mysticism Trained',    'Mysticism Skill Difficulty'],
+    performance: ['Performance Trained',  'Performance Skill Difficulty'],
+    sneak:       ['Sneak Trained',        'Sneak Skill Difficulty'],
+    survival:    ['Survival Trained',     'Survival Skill Difficulty'],
+  };
+  for (const [key, [trainedField, diffField]] of Object.entries(skillMap)) {
+    sc(trainedField, t[key]);
+  }
+  sc('Melee Weapons Trained', t.melee);
+  sc('Ranged Weapons Trained', t.ranged);
+
+  // Inventory - sort by order, put weapons first
+  const inv = Object.values(char.inventory || {}).sort((a,b) => a.order - b.order);
+  const weapons = inv.filter(i => i.damage);
+  const items = inv.filter(i => !i.damage);
+
+  weapons.forEach((w, i) => {
+    if (i >= 3) return;
+    sf('Weapon ' + (i+1) + ' Name', w.item);
+    sf('Weapon ' + (i+1) + ' Damage', w.damage);
+    sf('Weapon ' + (i+1) + ' Type', w.range || '');
+    sf('Weapon ' + (i+1) + ' Properties', w.description || '');
+  });
+
+  items.forEach((item, i) => {
+    if (i >= 14) return;
+    const qty = item.info ? item.item + ' (' + item.info + ')' : item.item;
+    sf('Inventory ' + (i+1), qty);
+  });
+
+  // Abilities
+  const abilities = Object.values(char.abilities || {}).sort((a,b) => a.order - b.order);
+  const spells = Object.values(char.spells || {}).sort((a,b) => a.order - b.order);
+  const abText = abilities.map(a => a.name + ': ' + a.description).join('\\n\\n');
+  sf('Abilities', abText);
+
+  // Spells in notes
+  const spellText = spells.map(sp => sp.name + (sp.info ? ' [' + sp.info + ']' : '') + ': ' + sp.description).join('\\n\\n');
+  sf('Notes', spellText);
+
+  // Save and download
+  form.flatten();
+  const filled = await pdfDoc.save();
+  const blob = new Blob([filled], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = (char.name || 'character') + '-hero-record.pdf';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  console.log('✅ PDF exported for:', char.name);
+})();`;
+
+    document.getElementById('script-block').textContent = CONSOLE_SCRIPT;
+
+    function copyScript(el) {
+      navigator.clipboard.writeText(el.textContent).then(() => {
+        el.classList.add('copied');
+        setTimeout(() => el.classList.remove('copied'), 2000);
+      });
+    }
+  </script>
+</body>
+</html>
