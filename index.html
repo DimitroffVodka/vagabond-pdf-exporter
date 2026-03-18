@@ -236,26 +236,42 @@
         sf("Current Luck", char.currentLuck);
         sf("Fatigue", char.fatigue);
 
-        // Skills (trained checkboxes)
-        const skillMap = {
-          arcana:      ["Arcana Trained",      "Arcana Skill Difficulty"],
-          brawl:       ["Brawn Trained",        "Brawn Skill Difficulty"],
-          craft:       ["Craft Trained",        "Craft Skill Difficulty"],
-          detect:      ["Detect Trained",       "Detect Skill Difficulty"],
-          finesse:     ["Finesse Trained",      "Finesse Skill Difficulty"],
-          influence:   ["Influence Trained",    "Influence Skill Difficulty"],
-          leadership:  ["Leadership Trained",   "Leadership Skill Difficulty"],
-          medicine:    ["Medicine Trained",     "Medicine Skill Difficulty"],
-          mysticism:   ["Mysticism Trained",    "Mysticism Skill Difficulty"],
-          performance: ["Performance Trained",  "Performance Skill Difficulty"],
-          sneak:       ["Sneak Trained",        "Sneak Skill Difficulty"],
-          survival:    ["Survival Trained",     "Survival Skill Difficulty"],
-        };
-        for (const [key, [trainedField]] of Object.entries(skillMap)) {
-          sc(trainedField, t[key]);
+        // Skill difficulty formula: 20 - stat × (trained ? 2 : 1)
+        function calcDiff(stat, trained) {
+          return 20 - (stat || 0) * (trained ? 2 : 1);
         }
+
+        // Skills: [trainedField, difficultyField, statKey]
+        const skillMap = {
+          arcana:      ["Arcana Trained",      "Arcana Skill Difficulty",      "reason"],
+          brawl:       ["Brawn Trained",        "Brawn Skill Difficulty",       "might"],
+          craft:       ["Craft Trained",        "Craft Skill Difficulty",       "reason"],
+          detect:      ["Detect Trained",       "Detect Skill Difficulty",      "awareness"],
+          finesse:     ["Finesse Trained",      "Finesse Skill Difficulty",     "dexterity"],
+          influence:   ["Influence Trained",    "Influence Skill Difficulty",   "presence"],
+          leadership:  ["Leadership Trained",   "Leadership Skill Difficulty",  "presence"],
+          medicine:    ["Medicine Trained",     "Medicine Skill Difficulty",    "reason"],
+          mysticism:   ["Mysticism Trained",    "Mysticism Skill Difficulty",   "awareness"],
+          performance: ["Performance Trained",  "Performance Skill Difficulty", "presence"],
+          sneak:       ["Sneak Trained",        "Sneak Skill Difficulty",       "dexterity"],
+          survival:    ["Survival Trained",     "Survival Skill Difficulty",    "awareness"],
+        };
+        for (const [key, [trainedField, diffField, statKey]] of Object.entries(skillMap)) {
+          const trained = t[key];
+          sc(trainedField, trained);
+          sf(diffField, calcDiff(s[statKey], trained));
+        }
+
+        // Attacks
         sc("Melee Weapons Trained", t.melee);
+        sf("Melee Attack Check Difficulty", calcDiff(s.might, t.melee));
         sc("Ranged Weapons Trained", t.ranged);
+        sf("Ranged Attack Difficulty", calcDiff(s.awareness, t.ranged));
+
+        // Saves: 20 - (statA + statB)
+        sf("Reflex Save Difficulty", 20 - ((s.dexterity || 0) + (s.awareness || 0)));
+        sf("Endure Save Difficulty", 20 - ((s.might || 0) + (s.might || 0)));
+        sf("Will Save Difficulty", 20 - ((s.reason || 0) + (s.presence || 0)));
 
         // Weapons
         const weapons = char.weapons || [];
