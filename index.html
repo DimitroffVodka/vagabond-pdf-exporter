@@ -273,18 +273,20 @@
         sf("Endure Save Difficulty", 20 - ((s.might || 0) + (s.might || 0)));
         sf("Will Save Difficulty", 20 - ((s.reason || 0) + (s.presence || 0)));
 
-        // Weapons
-        const weapons = char.weapons || [];
+        // Inventory — items with damage are weapons, the rest are gear
+        const allItems = Object.values(char.inventory || {}).sort((a, b) => (a.order || 0) - (b.order || 0));
+        const weapons = allItems.filter(item => item.damage);
+        const gear = allItems.filter(item => !item.damage);
+
         weapons.forEach((w, i) => {
           if (i >= 3) return;
-          sf("Weapon " + (i + 1), w.name || w.item || "");
+          sf("Weapon " + (i + 1), w.item || "");
           sf("Weapon Damage " + (i + 1), w.damage || "");
-          sf("Weapon Properties " + (i + 1), w.properties || w.description || "");
+          sf("Weapon Properties " + (i + 1), w.description || "");
+          sd("Grip " + (i + 1), w.grip || "F");
         });
 
-        // Inventory
-        const inv = Object.values(char.inventory || {}).sort((a, b) => (a.order || 0) - (b.order || 0));
-        inv.forEach((item, i) => {
+        gear.forEach((item, i) => {
           if (i >= 14) return;
           const label = item.info ? item.item + " (" + item.info + ")" : item.item;
           sf("Inventory " + (i + 1), label);
