@@ -194,8 +194,27 @@
         const pdfDoc = await PDFDocument.load(pdfBytes);
         const form = pdfDoc.getForm();
 
+        // Replace common Unicode symbols with ASCII equivalents,
+        // then strip anything else outside WinAnsi range
+        function sanitize(str) {
+          return String(str)
+            .replace(/\u2605/g, "*")   // ★ black star
+            .replace(/\u2606/g, "*")   // ☆ white star
+            .replace(/\u2014/g, "--")  // — em dash
+            .replace(/\u2013/g, "-")   // – en dash
+            .replace(/\u2018/g, "'")   // ' left single quote
+            .replace(/\u2019/g, "'")   // ' right single quote
+            .replace(/\u201C/g, '"')   // " left double quote
+            .replace(/\u201D/g, '"')   // " right double quote
+            .replace(/\u2022/g, "-")   // • bullet
+            .replace(/\u2026/g, "...")  // … ellipsis
+            .replace(/\u2192/g, "->")  // → arrow
+            .replace(/\u2190/g, "<-")  // ← arrow
+            .replace(/\u00D7/g, "x")   // × multiplication
+            .replace(/[^\x00-\x7F\xA0-\xFF]/g, "");
+        }
         function sf(name, val) {
-          try { form.getTextField(name).setText(val != null && val !== "" ? String(val) : ""); } catch(e) {}
+          try { form.getTextField(name).setText(val != null && val !== "" ? sanitize(val) : ""); } catch(e) {}
         }
         function sc(name, val) {
           try { if (val) form.getCheckBox(name).check(); else form.getCheckBox(name).uncheck(); } catch(e) {}
