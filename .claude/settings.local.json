@@ -9,7 +9,13 @@
       "Bash(curl -sL \"https://vagabond-extension.onrender.com/assets/index-DedzdHO4.js\")",
       "Bash(curl -sL \"https://unpkg.com/@owlbear-rodeo/sdk@latest/lib/index.js\")",
       "Bash(curl -sL \"https://esm.sh/@owlbear-rodeo/sdk\")",
-      "Bash(curl -sL \"https://esm.sh/@owlbear-rodeo/sdk?bundle\")"
+      "Bash(curl -sL \"https://esm.sh/@owlbear-rodeo/sdk?bundle\")",
+      "Bash(find E:FoundryVTTv13dataDatamodulesvagabond-pdf-importer -type f \\\\\\(-name *.md -o -name *.json \\\\\\))",
+      "Bash(grep -E \"\\\\.\\(json|js\\)$\")",
+      "Bash(file /e/FoundryVTTv13/data/Data/systems/vagabond/packs/items/*.db)",
+      "Bash(xargs grep:*)",
+      "Bash(find /F/GIT/vagabond-pdf-importer -type f \\\\\\(-name *.json -o -name *.yaml -o -name *.yml \\\\\\))",
+      "Bash(find /F/GIT/vagabond-pdf-exporter -type f \\\\\\(-name *.json -o -name *.yaml -o -name *.yml \\\\\\))"
     ]
   }
 }
