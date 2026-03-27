@@ -329,8 +329,7 @@
         ).join("\n\n");
         sf("Magic 1", spellText);
 
-        // Flatten and download
-        form.flatten();
+        // Do NOT flatten — the importer needs live form fields
         const filledBytes = await pdfDoc.save();
         const blob = new Blob([filledBytes], { type: "application/pdf" });
         const url = URL.createObjectURL(blob);
