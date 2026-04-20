@@ -78,6 +78,127 @@
     }
     button:hover { background: #e0cb30; }
     button:disabled { background: #555; color: #888; cursor: not-allowed; }
+    button.secondary {
+      background: #0f3460;
+      color: #e0e0e0;
+    }
+    button.secondary:hover { background: #1a4a80; }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+    }
+    .overlay-inner {
+      background: #16213e;
+      border: 1px solid #0f3460;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 340px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .overlay-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .overlay-header .title {
+      font-weight: 700;
+      color: #c8b420;
+      font-size: 14px;
+    }
+    .overlay-header .close {
+      background: none;
+      color: #888;
+      width: auto;
+      padding: 2px 8px;
+      font-size: 20px;
+      font-weight: 400;
+      border-radius: 4px;
+    }
+    .overlay-header .close:hover {
+      background: #0f3460;
+      color: #e0e0e0;
+    }
+    .overlay input[type=email],
+    .overlay input[type=password] {
+      background: #1a1a2e;
+      border: 1px solid #0f3460;
+      color: #e0e0e0;
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+    .overlay input:focus {
+      outline: none;
+      border-color: #c8b420;
+    }
+    .overlay .error-msg {
+      color: #f87171;
+      font-size: 11px;
+    }
+    .overlay .hint {
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+    }
+    .overlay .hint a { color: #c8b420; text-decoration: underline; }
+    .remote-char {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0f3460;
+      padding: 8px 10px;
+      border-radius: 4px;
+      gap: 8px;
+    }
+    .remote-char .rname {
+      font-size: 13px;
+      color: #e0e0e0;
+      font-weight: 600;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .remote-char .rinfo {
+      font-size: 10px;
+      color: #aaa;
+    }
+    .remote-char button {
+      width: auto;
+      padding: 4px 10px;
+      font-size: 11px;
+    }
+    .session-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #888;
+    }
+    .session-bar .link {
+      color: #c8b420;
+      cursor: pointer;
+      text-decoration: underline;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: inherit;
+      width: auto;
+    }
 
     .empty-state {
       text-align: center;
@@ -93,6 +214,21 @@
   <div id="status">Loading characters...</div>
   <div class="char-list" id="charList"></div>
   <button id="exportBtn" onclick="exportPDF()" disabled>Export to PDF</button>
+  <button class="secondary" id="exportFoundryBtn" onclick="exportFoundryJSON()" disabled>Export to Foundry JSON</button>
+  <button class="secondary" id="vgbndUrlBtn">Import from vgbnd.app URL</button>
+  <button class="secondary" id="vgbndBtn">Import from vgbnd.app (sign in)</button>
+  <input type="file" id="importFile" accept=".json,application/json" style="display:none">
+  <button class="secondary" onclick="document.getElementById('importFile').click()">Import from Foundry JSON</button>
+
+  <div id="vgbndOverlay" class="overlay" style="display:none">
+    <div class="overlay-inner">
+      <div class="overlay-header">
+        <span class="title" id="vgbndTitle">vgbnd.app</span>
+        <button class="close" id="vgbndClose" type="button">&times;</button>
+      </div>
+      <div id="vgbndBody"></div>
+    </div>
+  </div>
 
   <script type="module">
     import OBR from "https://esm.sh/@owlbear-rodeo/sdk@3.1.0";
@@ -150,6 +286,7 @@
       if (characters.length === 0) {
         list.innerHTML = '<div class="empty-state">No characters in scene</div>';
         document.getElementById("exportBtn").disabled = true;
+        document.getElementById("exportFoundryBtn").disabled = true;
         return;
       }
 
@@ -174,7 +311,752 @@
       }
 
       document.getElementById("exportBtn").disabled = !selectedId;
+      document.getElementById("exportFoundryBtn").disabled = !selectedId;
     }
+
+    // --- Foundry JSON import ---
+
+    function uid() {
+      if (crypto && crypto.randomUUID) return crypto.randomUUID();
+      return "id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+    }
+
+    function stripHtml(html) {
+      if (!html) return "";
+      const d = document.createElement("div");
+      d.innerHTML = String(html);
+      return d.textContent.replace(/\s+/g, " ").trim();
+    }
+
+    function mapSize(s) {
+      const map = { tiny: "T", small: "S", medium: "M", large: "L", huge: "H", gargantuan: "G" };
+      return map[String(s || "").toLowerCase()] || "M";
+    }
+
+    function mapFoundryToVagabond(foundry) {
+      const sys = foundry.system || {};
+      const items = foundry.items || [];
+      const ancestryItem = items.find(i => i.type === "ancestry");
+      const classItem = items.find(i => i.type === "class");
+      const perks = items.filter(i => i.type === "perk");
+      const equipment = items.filter(i => i.type === "equipment");
+      const spellItems = items.filter(i => i.type === "spell");
+
+      const stat = k => sys.stats?.[k]?.value ?? 0;
+      const stats = {
+        might: stat("might"),
+        dexterity: stat("dexterity"),
+        awareness: stat("awareness"),
+        reason: stat("reason"),
+        presence: stat("presence"),
+        luck: stat("luck"),
+      };
+
+      const training = {};
+      const skillKeys = [
+        "arcana","brawl","craft","detect","finesse","influence","leadership",
+        "medicine","mysticism","performance","sneak","survival","melee","ranged",
+      ];
+      for (const k of skillKeys) {
+        training[k] = !!(sys.skills?.[k]?.trained);
+      }
+
+      // Armor Rating: sum armorBonus changes across actor + equipped item effects
+      let armor = 0;
+      const addArmorFromEffects = effects => {
+        for (const eff of (effects || [])) {
+          if (eff.disabled) continue;
+          for (const ch of (eff.changes || [])) {
+            if (ch.key === "system.armorBonus") {
+              armor += parseInt(ch.value, 10) || 0;
+            }
+          }
+        }
+      };
+      addArmorFromEffects(foundry.effects);
+      for (const item of items) {
+        if (item.type === "equipment" && item.system?.equipped === false) continue;
+        addArmorFromEffects(item.effects);
+      }
+
+      // Inventory — weapons keep damage, other equipment becomes gear
+      const inventory = {};
+      equipment
+        .slice()
+        .sort((a, b) => (a.sort || 0) - (b.sort || 0))
+        .forEach((item, idx) => {
+          const s = item.system || {};
+          const isWeapon = s.equipmentType === "weapon";
+          const damage = isWeapon
+            ? (s.grip === "2H" ? s.damageTwoHands : s.damageOneHand) || s.damageOneHand || ""
+            : "";
+          const props = Array.isArray(s.properties) ? s.properties.filter(Boolean) : [];
+          const description = props.length ? props.join(", ") : stripHtml(s.description);
+          const qty = Number(s.quantity) || 1;
+          const id = uid();
+          inventory[id] = {
+            id,
+            item: item.name || "",
+            damage,
+            description,
+            info: qty > 1 ? "x" + qty : "",
+            grip: isWeapon ? (s.grip || "1H") : "",
+            order: idx,
+          };
+        });
+
+      // Abilities: ancestry traits + class features up to character level + perks
+      const abilities = {};
+      const charLevel = Number(sys.attributes?.level?.value) || 1;
+      let order = 0;
+      const addAbility = (name, desc) => {
+        if (!name) return;
+        const id = uid();
+        abilities[id] = { id, name, description: stripHtml(desc), order: order++ };
+      };
+      for (const trait of (ancestryItem?.system?.traits || [])) {
+        addAbility(trait.name, trait.description);
+      }
+      for (const f of (classItem?.system?.levelFeatures || [])) {
+        if ((Number(f.level) || 1) <= charLevel) addAbility(f.name, f.description);
+      }
+      for (const perk of perks) {
+        addAbility(perk.name, perk.system?.description);
+      }
+
+      // Spells
+      const spells = {};
+      spellItems
+        .slice()
+        .sort((a, b) => (a.sort || 0) - (b.sort || 0))
+        .forEach((sp, idx) => {
+          const id = uid();
+          const s = sp.system || {};
+          const info = [s.deliveryType, s.manaCost ? s.manaCost + " mana" : ""]
+            .filter(Boolean).join(", ");
+          spells[id] = {
+            id,
+            name: sp.name || "",
+            description: stripHtml(s.description),
+            info,
+            order: idx,
+          };
+        });
+
+      const id = uid();
+      return {
+        id,
+        name: foundry.name || "Imported",
+        level: charLevel,
+        xp: Number(sys.attributes?.xp) || 0,
+        ancestry: ancestryItem?.name || "",
+        class: classItem?.name || "",
+        speed: "",
+        speedBonus: "",
+        size: mapSize(sys.attributes?.size || ancestryItem?.system?.size),
+        beingType: sys.attributes?.beingType || "Humanlike",
+        stats,
+        training,
+        currentHP: sys.health?.value ?? 0,
+        maxHP: sys.health?.max ?? 0,
+        armor,
+        currentMana: sys.mana?.current ?? 0,
+        maxMana: sys.mana?.max ?? 0,
+        maxCastingMana: sys.mana?.castingMax ?? 0,
+        currentLuck: sys.currentLuck ?? 0,
+        fatigue: sys.fatigue ?? 0,
+        wealth: {
+          gold: Number(sys.currency?.gold) || 0,
+          silver: Number(sys.currency?.silver) || 0,
+          copper: Number(sys.currency?.copper) || 0,
+        },
+        inventory,
+        abilities,
+        spells,
+      };
+    }
+
+    // --- vgbnd.app direct import (Firestore REST) ---
+
+    const FIREBASE_API_KEY = "AIzaSyAX0K_GzIlY_26QK5EMvpvBKpFbA791jT0";
+    const FIREBASE_PROJECT = "vagabond-tag-along";
+    const FS_BASE = "https://firestore.googleapis.com/v1/projects/" + FIREBASE_PROJECT + "/databases/(default)/documents";
+    const SESSION_KEY = "vagabond-pdf-exporter:vgbnd-session";
+
+    function fsVal(v) {
+      if ("stringValue" in v) return v.stringValue;
+      if ("integerValue" in v) return Number(v.integerValue);
+      if ("doubleValue" in v) return v.doubleValue;
+      if ("booleanValue" in v) return v.booleanValue;
+      if ("nullValue" in v) return null;
+      if ("timestampValue" in v) return v.timestampValue;
+      if ("arrayValue" in v) return (v.arrayValue.values ?? []).map(fsVal);
+      if ("mapValue" in v) return fsFields(v.mapValue.fields ?? {});
+      return undefined;
+    }
+    function fsFields(fields) {
+      return Object.fromEntries(Object.entries(fields).map(([k, v]) => [k, fsVal(v)]));
+    }
+
+    function loadVgbndSession() {
+      try { return JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); }
+      catch { return null; }
+    }
+    function saveVgbndSession(s) {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+    }
+    function clearVgbndSession() {
+      localStorage.removeItem(SESSION_KEY);
+    }
+
+    async function vgbndSignIn(email, password) {
+      const res = await fetch(
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + FIREBASE_API_KEY,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, returnSecureToken: true }),
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        const msg = data.error?.message || ("HTTP " + res.status);
+        throw new Error(prettyAuthError(msg));
+      }
+      const session = {
+        idToken: data.idToken,
+        refreshToken: data.refreshToken,
+        uid: data.localId,
+        email: data.email || email,
+        expiresAt: Date.now() + Number(data.expiresIn) * 1000 - 60_000,
+      };
+      saveVgbndSession(session);
+      return session;
+    }
+
+    function prettyAuthError(code) {
+      const m = {
+        EMAIL_NOT_FOUND: "No account with that email.",
+        INVALID_PASSWORD: "Wrong password.",
+        INVALID_LOGIN_CREDENTIALS: "Wrong email or password.",
+        USER_DISABLED: "This account has been disabled.",
+        TOO_MANY_ATTEMPTS_TRY_LATER: "Too many attempts — try again later.",
+      };
+      return m[code] || code;
+    }
+
+    async function vgbndGetSession() {
+      const s = loadVgbndSession();
+      if (!s) return null;
+      if (Date.now() < s.expiresAt) return s;
+      try {
+        const res = await fetch(
+          "https://securetoken.googleapis.com/v1/token?key=" + FIREBASE_API_KEY,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "grant_type=refresh_token&refresh_token=" + encodeURIComponent(s.refreshToken),
+          }
+        );
+        const data = await res.json();
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const updated = {
+          ...s,
+          idToken: data.id_token,
+          refreshToken: data.refresh_token,
+          expiresAt: Date.now() + Number(data.expires_in) * 1000 - 60_000,
+        };
+        saveVgbndSession(updated);
+        return updated;
+      } catch {
+        clearVgbndSession();
+        return null;
+      }
+    }
+
+    async function vgbndListCharacters(session) {
+      const res = await fetch(FS_BASE + ":runQuery", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + session.idToken,
+        },
+        body: JSON.stringify({
+          structuredQuery: {
+            from: [{ collectionId: "characters" }],
+            where: {
+              fieldFilter: {
+                field: { fieldPath: "userId" },
+                op: "EQUAL",
+                value: { stringValue: session.uid },
+              },
+            },
+          },
+        }),
+      });
+      if (!res.ok) throw new Error("Firestore query failed: HTTP " + res.status);
+      const rows = await res.json();
+      return rows
+        .filter(r => r.document)
+        .map(r => ({
+          id: r.document.name.split("/").pop(),
+          ...fsFields(r.document.fields ?? {}),
+        }));
+    }
+
+    function openVgbnd() {
+      document.getElementById("vgbndOverlay").style.display = "flex";
+      renderVgbndState();
+    }
+    function closeVgbnd() {
+      document.getElementById("vgbndOverlay").style.display = "none";
+    }
+
+    async function renderVgbndState() {
+      const session = await vgbndGetSession();
+      if (session) renderVgbndBrowser(session);
+      else renderVgbndSignIn();
+    }
+
+    function renderVgbndSignIn(errorMsg = "") {
+      document.getElementById("vgbndTitle").textContent = "Sign in to vgbnd.app";
+      const body = document.getElementById("vgbndBody");
+      body.innerHTML =
+        '<form id="vgbndForm" style="display:flex;flex-direction:column;gap:8px">' +
+          '<input type="email" id="vgbndEmail" placeholder="email" autocomplete="email" required>' +
+          '<input type="password" id="vgbndPassword" placeholder="password" autocomplete="current-password" required>' +
+          (errorMsg ? '<div class="error-msg">' + esc(errorMsg) + '</div>' : '') +
+          '<button type="submit" id="vgbndSignInBtn">Sign in</button>' +
+        '</form>' +
+        '<div class="hint">No account? Create one at <a href="https://www.vgbnd.app" target="_blank" rel="noopener">vgbnd.app</a></div>';
+
+      document.getElementById("vgbndForm").addEventListener("submit", async (ev) => {
+        ev.preventDefault();
+        const email = document.getElementById("vgbndEmail").value.trim();
+        const password = document.getElementById("vgbndPassword").value;
+        const btn = document.getElementById("vgbndSignInBtn");
+        btn.disabled = true;
+        btn.textContent = "Signing in...";
+        try {
+          const session = await vgbndSignIn(email, password);
+          renderVgbndBrowser(session);
+        } catch (e) {
+          renderVgbndSignIn(e.message);
+        }
+      });
+    }
+
+    async function renderVgbndBrowser(session) {
+      document.getElementById("vgbndTitle").textContent = "vgbnd.app characters";
+      const body = document.getElementById("vgbndBody");
+      body.innerHTML = '<div class="hint">Loading your characters...</div>';
+
+      let chars;
+      try {
+        chars = await vgbndListCharacters(session);
+      } catch (e) {
+        body.innerHTML =
+          '<div class="error-msg">' + esc(e.message) + '</div>' +
+          '<div class="session-bar">' +
+            '<span>' + esc(session.email) + '</span>' +
+            '<button class="link" id="vgbndSignOutBtn" type="button">Sign out</button>' +
+          '</div>';
+        attachSignOut();
+        return;
+      }
+
+      let listHtml;
+      if (!chars.length) {
+        listHtml = '<div class="hint">No characters found on this account.</div>';
+      } else {
+        chars.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+        listHtml = '<div class="char-list">' + chars.map((c, idx) => {
+          const info = [
+            c.items?.find?.(i => i.type === "class")?.name,
+            c.items?.find?.(i => i.type === "ancestry")?.name,
+            c.system?.attributes?.level?.value ? "Lv " + c.system.attributes.level.value : "",
+          ].filter(Boolean).join(" \u00B7 ");
+          return (
+            '<div class="remote-char">' +
+              '<div style="flex:1;min-width:0">' +
+                '<div class="rname">' + esc(c.name || "Unnamed") + '</div>' +
+                (info ? '<div class="rinfo">' + esc(info) + '</div>' : '') +
+              '</div>' +
+              '<button data-idx="' + idx + '" class="vgbnd-import-btn">Import</button>' +
+            '</div>'
+          );
+        }).join("") + '</div>';
+      }
+
+      body.innerHTML =
+        listHtml +
+        '<div class="session-bar">' +
+          '<span>' + esc(session.email) + '</span>' +
+          '<button class="link" id="vgbndSignOutBtn" type="button">Sign out</button>' +
+        '</div>';
+
+      body.querySelectorAll(".vgbnd-import-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const char = chars[Number(btn.dataset.idx)];
+          btn.disabled = true;
+          btn.textContent = "...";
+          try {
+            await importVgbndCharacter(char);
+            btn.textContent = "Imported";
+          } catch (e) {
+            setStatus("Import failed: " + e.message, "error");
+            btn.disabled = false;
+            btn.textContent = "Retry";
+          }
+        });
+      });
+      attachSignOut();
+    }
+
+    function attachSignOut() {
+      const btn = document.getElementById("vgbndSignOutBtn");
+      if (!btn) return;
+      btn.addEventListener("click", () => {
+        clearVgbndSession();
+        renderVgbndSignIn();
+      });
+    }
+
+    async function importVgbndCharacter(remote) {
+      const char = mapFoundryToVagabond(remote);
+      const metadata = await OBR.scene.getMetadata();
+      const existing = { ...(metadata[METADATA_KEY] || {}) };
+      existing[char.id] = char;
+      await OBR.scene.setMetadata({ [METADATA_KEY]: existing });
+      selectedId = char.id;
+      setStatus("Imported " + char.name, "success");
+      await loadCharacters();
+    }
+
+    document.getElementById("vgbndBtn").addEventListener("click", openVgbnd);
+    document.getElementById("vgbndClose").addEventListener("click", closeVgbnd);
+    document.getElementById("vgbndOverlay").addEventListener("click", (e) => {
+      if (e.target === e.currentTarget) closeVgbnd();
+    });
+
+    const UUID_RE = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+
+    document.getElementById("vgbndUrlBtn").addEventListener("click", async () => {
+      const input = prompt("Paste a vgbnd.app character URL or ID:");
+      if (!input) return;
+      const match = UUID_RE.exec(input.trim());
+      if (!match) {
+        setStatus("Couldn't find a character ID in that input.", "error");
+        return;
+      }
+      const id = match[0];
+      const btn = document.getElementById("vgbndUrlBtn");
+      btn.disabled = true;
+      setStatus("Fetching character...", "");
+      try {
+        const res = await fetch("https://www.vgbnd.app/api/characters/" + id + "?format=foundry");
+        if (!res.ok) {
+          if (res.status === 403 || res.status === 404) {
+            throw new Error("Character is private or not found. Try signing in instead.");
+          }
+          throw new Error("HTTP " + res.status);
+        }
+        const foundry = await res.json();
+        const char = mapFoundryToVagabond(foundry);
+        const metadata = await OBR.scene.getMetadata();
+        const existing = { ...(metadata[METADATA_KEY] || {}) };
+        existing[char.id] = char;
+        await OBR.scene.setMetadata({ [METADATA_KEY]: existing });
+        selectedId = char.id;
+        setStatus("Imported " + char.name, "success");
+        await loadCharacters();
+      } catch (e) {
+        setStatus("Import failed: " + e.message, "error");
+        console.error(e);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById("importFile").addEventListener("change", async (e) => {
+      const file = e.target.files && e.target.files[0];
+      e.target.value = "";
+      if (!file) return;
+      try {
+        setStatus("Reading " + file.name + "...", "");
+        const text = await file.text();
+        const foundry = JSON.parse(text);
+        if (foundry.type && foundry.type !== "character") {
+          throw new Error("Not a character actor (type: " + foundry.type + ")");
+        }
+        const char = mapFoundryToVagabond(foundry);
+
+        const metadata = await OBR.scene.getMetadata();
+        const existing = { ...(metadata[METADATA_KEY] || {}) };
+        existing[char.id] = char;
+        await OBR.scene.setMetadata({ [METADATA_KEY]: existing });
+
+        selectedId = char.id;
+        setStatus("Imported " + char.name, "success");
+        await loadCharacters();
+      } catch (err) {
+        setStatus("Import failed: " + err.message, "error");
+        console.error(err);
+      }
+    });
+
+    // --- Foundry JSON export ---
+
+    function escapeHtml(s) {
+      return String(s ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    const SKILL_KEYS = [
+      "arcana","brawl","craft","detect","finesse","influence","leadership",
+      "medicine","mysticism","performance","sneak","survival","melee","ranged",
+    ];
+
+    const SIZE_TO_FOUNDRY = { T: "tiny", S: "small", M: "medium", L: "large", H: "huge", G: "gargantuan" };
+
+    function mapVagabondToFoundry(char) {
+      const s = char.stats || {};
+      const t = char.training || {};
+      const items = [];
+
+      if (char.ancestry) {
+        items.push({
+          name: char.ancestry,
+          type: "ancestry",
+          img: "icons/svg/mystery-man.svg",
+          system: {
+            description: "",
+            size: SIZE_TO_FOUNDRY[char.size] || "medium",
+            ancestryType: "",
+            traits: [],
+          },
+          effects: [],
+          sort: 0,
+          flags: {},
+          ownership: { default: 0 },
+        });
+      }
+
+      if (char.class) {
+        items.push({
+          name: char.class,
+          type: "class",
+          img: "icons/svg/mystery-man.svg",
+          system: {
+            description: "",
+            isSpellcaster: Number(char.maxMana) > 0,
+            levelFeatures: [],
+            manaSkill: null,
+            castingStat: "reason",
+            manaMultiplier: 0,
+            skillGrant: { guaranteed: [], choices: [] },
+            levelSpells: [],
+            keyStats: [],
+            suggestedStartingPacks: [],
+          },
+          effects: [],
+          sort: 0,
+          flags: {},
+          ownership: { default: 0 },
+        });
+      }
+
+      const abilities = Object.values(char.abilities || {}).sort((a, b) => (a.order || 0) - (b.order || 0));
+      abilities.forEach((ab, i) => {
+        items.push({
+          name: ab.name || "Ability",
+          type: "perk",
+          img: "icons/svg/book.svg",
+          system: {
+            description: ab.description ? "<p>" + escapeHtml(ab.description) + "</p>" : "",
+            prerequisites: {
+              stats: [], trainedSkills: [], spells: [],
+              statOrGroups: [], trainedSkillOrGroups: [], spellOrGroups: [],
+              hasAnySpell: false, resources: [], resourceOrGroups: [],
+            },
+            choiceConfig: { type: "none", selected: "", targetField: "", effectMode: 5, effectValue: "1" },
+          },
+          effects: [],
+          sort: (i + 1) * 100000,
+          flags: {},
+          ownership: { default: 0 },
+        });
+      });
+
+      const inv = Object.values(char.inventory || {}).sort((a, b) => (a.order || 0) - (b.order || 0));
+      inv.forEach((item, i) => {
+        const isWeapon = !!item.damage;
+        let quantity = 1;
+        const m = /^x?(\d+)$/i.exec(String(item.info || "").trim());
+        if (m) quantity = parseInt(m[1], 10) || 1;
+
+        const grip = (item.grip === "2H" || item.grip === "1H") ? item.grip : "1H";
+
+        items.push({
+          name: item.item || "Item",
+          type: "equipment",
+          img: isWeapon ? "icons/weapons/swords/sword-guard-brown.webp" : "icons/containers/bags/pack-leather-brown.webp",
+          system: {
+            description: item.description ? "<p>" + escapeHtml(item.description) + "</p>" : "",
+            equipmentType: isWeapon ? "weapon" : "gear",
+            locked: false,
+            equipped: isWeapon,
+            quantity,
+            baseCost: { gold: 0, silver: 0, copper: 0 },
+            baseSlots: 1,
+            metal: "none",
+            damageType: "-",
+            damageAmount: "",
+            properties: [],
+            weaponSkill: "melee",
+            range: "close",
+            grip,
+            damageOneHand: isWeapon ? (item.damage || "") : "",
+            damageTwoHands: isWeapon ? (item.damage || "") : "",
+            equipmentState: isWeapon ? (grip === "2H" ? "twoHand" : "oneHand") : "unequipped",
+            armorType: "light",
+            immunities: [],
+            gearCategory: "",
+            alchemicalType: "concoction",
+            lore: "",
+            damageTypeOneHand: "-",
+            damageTypeTwoHands: "-",
+            requiresBound: false,
+            bound: false,
+            gridPosition: 0,
+            containerId: null,
+            canExplode: false,
+            explodeValues: "",
+            isSupply: false,
+            isBeverage: false,
+            isConsumable: false,
+            linkedConsumable: "",
+            passiveCausedStatuses: [],
+            causedStatuses: [],
+            critCausedStatuses: [],
+            blockedStatuses: [],
+            resistedStatuses: [],
+            coating: { sourceName: "", charges: 0, causedStatuses: [] },
+          },
+          effects: [],
+          sort: (i + 1) * 100000,
+          flags: {},
+          ownership: { default: 0 },
+        });
+      });
+
+      const spells = Object.values(char.spells || {}).sort((a, b) => (a.order || 0) - (b.order || 0));
+      spells.forEach((sp, i) => {
+        items.push({
+          name: sp.name || "Spell",
+          type: "spell",
+          img: "icons/svg/explosion.svg",
+          system: {
+            description: sp.description ? "<p>" + escapeHtml(sp.description) + "</p>" : "",
+          },
+          effects: [],
+          sort: (i + 1) * 100000,
+          flags: {},
+          ownership: { default: 0 },
+        });
+      });
+
+      const statBlock = k => ({ value: Number(s[k]) || 0, bonus: [] });
+      const skillBlock = Object.fromEntries(
+        SKILL_KEYS.map(k => [k, { trained: !!t[k], bonus: [] }])
+      );
+
+      return {
+        name: char.name || "Unnamed",
+        type: "character",
+        img: "icons/svg/mystery-man.svg",
+        system: {
+          attributes: {
+            level: { value: Number(char.level) || 1 },
+            xp: Number(char.xp) || 0,
+            size: null,
+            beingType: char.beingType || null,
+            isSpellcaster: Number(char.maxMana) > 0,
+            manaMultiplier: 0,
+            castingStat: "reason",
+            manaSkill: null,
+          },
+          details: { builderDismissed: true, constructed: false },
+          stats: {
+            might: statBlock("might"),
+            dexterity: statBlock("dexterity"),
+            awareness: statBlock("awareness"),
+            reason: statBlock("reason"),
+            presence: statBlock("presence"),
+            luck: statBlock("luck"),
+          },
+          skills: skillBlock,
+          health: { value: Number(char.currentHP) || 0, max: Number(char.maxHP) || 0, bonus: [] },
+          mana: {
+            current: Number(char.currentMana) || 0,
+            max: Number(char.maxMana) || 0,
+            castingMax: Number(char.maxCastingMana) || 0,
+            bonus: [],
+            castingMaxBonus: [],
+          },
+          currentLuck: Number(char.currentLuck) || 0,
+          fatigue: Number(char.fatigue) || 0,
+          fatigueBonus: [],
+          biography: "",
+          currency: {
+            gold: Number(char.wealth?.gold) || 0,
+            silver: Number(char.wealth?.silver) || 0,
+            copper: Number(char.wealth?.copper) || 0,
+          },
+          inventory: { bonusSlots: [], boundsBonus: [] },
+          focus: { spellIds: [], maxBonus: [], max: 5, current: 0 },
+          speed: { bonus: [] },
+          bonusLuck: [],
+          armorBonus: Number(char.armor) ? [{ value: String(Number(char.armor)), source: "Imported" }] : [],
+          saves: { reflex: { bonus: [] }, endure: { bonus: [] }, will: { bonus: [] } },
+          immunities: [],
+          weaknesses: [],
+          statusImmunities: [],
+          statusResistances: [],
+        },
+        items,
+        effects: [],
+        folder: null,
+        flags: {},
+        ownership: { default: 0 },
+      };
+    }
+
+    window.exportFoundryJSON = function exportFoundryJSON() {
+      const char = characters.find(c => c.id === selectedId);
+      if (!char) return;
+      try {
+        const actor = mapVagabondToFoundry(char);
+        const blob = new Blob([JSON.stringify(actor, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        const safeName = String(char.name || "character").replace(/[^\w-]+/g, "_");
+        a.href = url;
+        a.download = "fvtt-Actor-" + safeName + ".json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        setStatus("Foundry JSON downloaded!", "success");
+      } catch (e) {
+        setStatus("Export failed: " + e.message, "error");
+        console.error(e);
+      }
+    };
 
     // Expose exportPDF globally so the onclick can call it
     window.exportPDF = async function exportPDF() {
