@@ -439,10 +439,13 @@ import OBR from "./vendor/obr-sdk.js";
       } else {
         chars.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
         listHtml = '<div class="char-list">' + chars.map((c, idx) => {
+          const cls = c.class || c.items?.find?.(i => i.type === "class")?.name;
+          const anc = c.ancestry || c.items?.find?.(i => i.type === "ancestry")?.name;
+          const lvl = c.level ?? c.system?.attributes?.level?.value;
           const info = [
-            c.items?.find?.(i => i.type === "class")?.name,
-            c.items?.find?.(i => i.type === "ancestry")?.name,
-            c.system?.attributes?.level?.value ? "Lv " + c.system.attributes.level.value : "",
+            cls ? titleCase(cls) : "",
+            anc ? titleCase(anc) : "",
+            lvl ? "Lv " + lvl : "",
           ].filter(Boolean).join(" \u00B7 ");
           return (
             '<div class="remote-char">' +
@@ -490,8 +493,122 @@ import OBR from "./vendor/obr-sdk.js";
       });
     }
 
+    function titleCase(s) {
+      return String(s || "")
+        .replace(/[_-]+/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .trim();
+    }
+
+    // vgbnd.app native (Firestore) shape -> OBR Vagabond shape
+    function mapNativeToVagabond(raw) {
+      const base = raw.assignedStats || {};
+      const bonus = raw.levelStats || {};
+      const addStat = k => (Number(base[k]) || 0) + (Number(bonus[k]) || 0);
+      const stats = {
+        might: addStat("might"),
+        dexterity: addStat("dexterity"),
+        awareness: addStat("awareness"),
+        reason: addStat("reason"),
+        presence: addStat("presence"),
+        luck: addStat("luck"),
+      };
+
+      const skillKeys = [
+        "arcana","brawl","craft","detect","finesse","influence","leadership",
+        "medicine","mysticism","performance","sneak","survival","melee","ranged",
+      ];
+      const trainedSet = new Set((raw.trained_skills || []).map(s => String(s).toLowerCase()));
+      const training = {};
+      for (const k of skillKeys) training[k] = trainedSet.has(k);
+
+      const inv = Array.isArray(raw.inventory) ? raw.inventory : [];
+      const inventory = {};
+      let armor = 0;
+      inv.forEach((it, idx) => {
+        const isWeapon = it.category === "Weapon" || !!it.damage;
+        if (it.category === "Armor" && it.is_equipped && typeof it.rating === "number") {
+          armor = Math.max(armor, it.rating);
+        }
+        const propsDesc = Array.isArray(it.properties) && it.properties.length
+          ? it.properties.join(", ")
+          : (it.desc || "");
+        const qty = Number(it.quantity) || 1;
+        const id = uid();
+        inventory[id] = {
+          id,
+          item: it.name || "",
+          damage: isWeapon ? (it.damage || "") : "",
+          description: propsDesc,
+          info: qty > 1 ? "x" + qty : "",
+          grip: isWeapon ? (it.grip || "1H") : "",
+          order: idx,
+        };
+      });
+
+      const abilities = {};
+      let order = 0;
+      for (const perk of (raw.selected_perks || [])) {
+        if (!perk?.name) continue;
+        const id = uid();
+        abilities[id] = {
+          id,
+          name: perk.name,
+          description: perk.description || "",
+          order: order++,
+        };
+      }
+
+      const spells = {};
+      (raw.known_spells || []).forEach((sp, idx) => {
+        const id = uid();
+        const name = typeof sp === "string" ? titleCase(sp) : (sp?.name || titleCase(sp?.id || ""));
+        spells[id] = {
+          id,
+          name,
+          description: typeof sp === "object" ? (sp?.description || "") : "",
+          info: "",
+          order: idx,
+        };
+      });
+
+      const wealth = raw.current_wealth || {};
+      const id = uid();
+      return {
+        id,
+        name: raw.name || "Imported",
+        level: Number(raw.level) || 1,
+        xp: Number(raw.xp) || 0,
+        ancestry: titleCase(raw.ancestry || ""),
+        class: titleCase(raw.class || ""),
+        speed: "",
+        speedBonus: "",
+        size: "M",
+        beingType: "Humanlike",
+        stats,
+        training,
+        currentHP: Number(raw.current_hp) || 0,
+        maxHP: Number(raw.current_hp) || 0,
+        armor,
+        currentMana: Number(raw.current_mana) || 0,
+        maxMana: 0,
+        maxCastingMana: 0,
+        currentLuck: Number(raw.current_luck) || 0,
+        fatigue: 0,
+        wealth: {
+          gold: Number(wealth.g) || 0,
+          silver: Number(wealth.s) || 0,
+          copper: Number(wealth.c) || 0,
+        },
+        inventory,
+        abilities,
+        spells,
+      };
+    }
+
     async function importVgbndCharacter(remote) {
-      const char = mapFoundryToVagabond(remote);
+      // Detect shape: foundry-shape has system/items; native has assignedStats
+      const char = remote.system ? mapFoundryToVagabond(remote) : mapNativeToVagabond(remote);
       const metadata = await OBR.scene.getMetadata();
       const existing = { ...(metadata[METADATA_KEY] || {}) };
       existing[char.id] = char;
