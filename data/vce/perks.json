@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Summoner",
+    "type": "perk",
+    "img": "icons/magic/control/control-influence-puppet.webp",
+    "system": {
+      "description": "<p><span class=\"fontstyle0\">You can take the Cast Action to conjure a Summon, which is a non-Humanlike Being you have previously defeated with HD equal to or lower than your Level, spending Mana to do so equal to the Summon's HD.</span></p><p><span class=\"fontstyle0\">You must conduct a 10 minute Ritual to choose which Being is your Summon before taking this Action.</span></p><p><span class=\"fontstyle0\">The following rules apply to your Summon:</span></p><ul><li><span class=\"fontstyle0\">It is an Ally that obeys your commands, which you can issue as an Action or by skipping your Move.</span></li><li><span class=\"fontstyle0\">It uses your Cast Check for Checks and Saves it makes.</span></li><li><span class=\"fontstyle0\">You must Focus on the Summon, spending 1 Mana per Turn while it is conjured. Otherwise, the Summon is banished.</span></li><li><span class=\"fontstyle0\">When it is reduced to 0 HP or if you conjure another Summon, it is banished.</span></li><li><span class=\"fontstyle0\">Whenever it is banished, any Abilities that would end on its death end.</span></li></ul>",
+      "prerequisites": {
+        "stats": [],
+        "statOrGroups": [],
+        "trainedSkills": [],
+        "trainedSkillOrGroups": [
+          [
+            "arcana",
+            "mysticism"
+          ]
+        ],
+        "spells": [],
+        "spellOrGroups": [],
+        "hasAnySpell": false,
+        "resources": [],
+        "resourceOrGroups": []
+      },
+      "choiceConfig": {
+        "type": "none",
+        "selected": "",
+        "targetField": "",
+        "effectMode": 5,
+        "effectValue": "1"
+      }
+    },
+    "effects": [],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774281171825,
+      "modifiedTime": 1774281171825,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "6D1YgIAqrN4EAPRf",
+    "sort": 0
+  }
+]

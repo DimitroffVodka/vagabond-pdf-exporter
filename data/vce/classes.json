@@ -1,0 +1,1334 @@
+[
+  {
+    "name": "Dragoon",
+    "type": "class",
+    "img": "icons/skills/movement/feet-winged-sandals-tan.webp",
+    "system": {
+      "description": "<p><strong>Always return from the battlefield.</strong></p><p><em>– Dissidia Final Fantasy, Dragoon's Battle Verse</em></p><p>Dragoons are spear-wielding warriors who emulate the fighting tactics of dragons with massive leaps and magic.</p><h3>Iconic Dragoons</h3><ul><li><strong>Kain Highwind</strong>, <em>Final Fantasy IV</em></li><li><strong>Kaladin Stormblessed</strong>, <em>Stormlight Archive</em></li><li><strong>Messmer the Impaler</strong>, <em>Elden Ring</em></li></ul><h3>Playing Dragoon</h3><p>Dragoons are mid-defense striking gishes with a ton of mobility.</p><p><strong>Action:</strong> Attack<br /><strong>Move:</strong> Frontline/Midline<br /><strong>Starting Pack:</strong> Knight<br /><strong>Key Stat:</strong> Might<br /><strong>Complexity:</strong> ★★★☆☆</p><h3>Training</h3><p><strong>Weapons:</strong> Melee<br /><strong>Skills:</strong> Mysticism, and 3 from either Arcana, Detect, Influence, or Leadership</p><p></p><h3><span class=\"fontstyle0\">Class Features</span></h3><table class=\"NormalTable\"><tbody><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Level</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Features</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">1st</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Dragoon's Leap, Battle Litany</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">2nd</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Elemental Resistance</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">3rd</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">4th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">High Jump</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">5th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">6th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Meteor (Close)</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">7th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">8th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Mythic Mein</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">9th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">10th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Stardiver, Meteor (Near)</span></p></td></tr></tbody></table><p><br style=\"font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:normal;orphans:2;text-align:-webkit-auto;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;-webkit-text-size-adjust:auto;-webkit-text-stroke-width:0px\" /></p>",
+      "isSpellcaster": false,
+      "manaMultiplier": 0,
+      "manaSkill": null,
+      "castingStat": null,
+      "keyStats": [
+        "might"
+      ],
+      "skillGrant": {
+        "guaranteed": [
+          "melee",
+          "mysticism"
+        ],
+        "choices": [
+          {
+            "count": 3,
+            "pool": [
+              "arcana",
+              "detect",
+              "influence",
+              "leadership"
+            ],
+            "label": ""
+          }
+        ]
+      },
+      "levelFeatures": [
+        {
+          "level": 1,
+          "name": "Dragoon's Leap",
+          "description": "<p><span class=\"fontstyle0\">You are permanently under the effects of the Leap Spell, and you can Attack and Jump with the same Action.</span></p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 1,
+          "name": "Battle Litany",
+          "description": "<p><span class=\"fontstyle0\">You gain the Heavy Arms Perk and, if you hit with an Attack after a Jump, the damage dice can Explode on a 1 or 2.</span></p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 2,
+          "name": "Elemental Resistance",
+          "description": "<p><span class=\"fontstyle0\">You reduce Cold, Fire, and Shock damage you take by (half your Dragoon Level) per damage die.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 3,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 4,
+          "name": "High Jump",
+          "description": "<p><span class=\"fontstyle0\">The distance or height you can leap with the Leap Spell increases by 10' now, and every 4 Dragoon levels hereafter.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 5,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 6,
+          "name": "Meteor",
+          "description": "<p><span class=\"fontstyle0\">Any dice that Explode from your attacks also damage Close Beings of your choice.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 7,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 8,
+          "name": "Mythic Mein",
+          "description": "<p><span class=\"fontstyle0\">Once per Shift, if you are reduced to 0 HP, you regain HP equal to (2 × your Dragoon Level) and can immediately take an Action and Move.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 9,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 10,
+          "name": "Stardiver",
+          "description": "<p><span class=\"fontstyle0\">When you hit with an Attack after a Jump, choose one of the damage dice. That die Explodes, no matter its value.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 10,
+          "name": "Meteor",
+          "description": "<p><span class=\"fontstyle0\">Exploded dice from your attacks now also damage Near Beings of your choice (upgraded from Close).</span></p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ],
+      "suggestedStartingPacks": [],
+      "levelSpells": []
+    },
+    "effects": [],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774270833169,
+      "modifiedTime": 1774274680291,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "0xeUWuj4Z7r1UZl7",
+    "sort": 100000
+  },
+  {
+    "name": "Summoner",
+    "type": "class",
+    "img": "icons/magic/control/control-influence-puppet.webp",
+    "system": {
+      "description": "<p><strong>Sic 'em!</strong></p><p><em>– Dog Command</em></p><p>Mages who specialize in conjuration magic, summoners are able to create avatars from beings willing to lend them their power.</p><h3>Iconic Summoners</h3><ul><li><strong>Aladdin</strong>, Middle-Eastern folk tale</li><li><strong>Ash Ketchum</strong>, <em>Pokémon series</em></li><li><strong>Corum Jhaelen Irsei</strong>, <em>Chronicles of Corum</em></li><li><strong>Gaige DiMartino</strong>, <em>Borderlands 2</em></li><li><strong>Yuna Braska</strong>, <em>Final Fantasy X</em></li></ul><h3>Playing Summoner</h3><p>Summoners call forth Summons to fight on their behalf, planting them firmly in the backline and prioritizing Spells that support their Summon and Allies.</p><p><strong>Action:</strong> Cast (Summon)<br /><strong>Move:</strong> Backline<br /><strong>Starting Pack:</strong> Mage or Fortune Teller<br /><strong>Key Stat:</strong> Awareness<br /><strong>Complexity:</strong> ★★★★☆</p><h3>Training</h3><p><strong>Weapons:</strong> –<br /><strong>Skills:</strong> Mysticism and 3 others</p><p></p><h3><span class=\"fontstyle0\">Class Features</span></h3><table class=\"NormalTable\"><tbody><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Level</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Features</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">1st</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Arcanum, Creature Codex</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">2nd</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Soulbonder</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">3rd</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">4th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Second Nature</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">5th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">6th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Avatar Emergence</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">7th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">8th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Guardian Force</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">9th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">10th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Ultimate Weapon</span></p></td></tr></tbody></table><p><br style=\"font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:normal;orphans:2;text-align:-webkit-auto;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;-webkit-text-size-adjust:auto;-webkit-text-stroke-width:0px\" /></p>",
+      "isSpellcaster": true,
+      "manaMultiplier": 4,
+      "manaSkill": "mysticism",
+      "castingStat": "awareness",
+      "keyStats": [
+        "awareness"
+      ],
+      "skillGrant": {
+        "guaranteed": [
+          "mysticism"
+        ],
+        "choices": [
+          {
+            "count": 3,
+            "pool": [],
+            "label": ""
+          }
+        ]
+      },
+      "levelFeatures": [
+        {
+          "level": 1,
+          "name": "Arcanum",
+          "description": "<p><span class=\"fontstyle0\">You can Cast Spells using Mysticism.</span></p><p><span class=\"fontstyle0\"><strong>Spells:</strong> You learn 4 Spells. You learn 1 other Spell every 2 Summoner Levels hereafter.</span></p><p><span class=\"fontstyle0\"><strong>Mana:</strong> Your Maximum Mana is equal to (4 × your Summoner Level), and the highest amount of Mana you can spend to Cast a Spell is equal to (Awareness + half your Summoner Level, round up). You regain spent Mana when you Rest.</span></p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 4,
+          "skillChoices": []
+        },
+        {
+          "level": 1,
+          "name": "Creature Codex",
+          "description": "<p><span class=\"fontstyle0\">You gain the Conjurer Perk, and can replace Spells you know with Summons. Additionally, you can choose a Summon with HD as high as your Summoner Level.</span></p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 2,
+          "name": "Soulbonder",
+          "description": "<p><span class=\"fontstyle0\">You gain the Armor and Immunities of your Summons while they are conjured.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 3,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 1,
+          "skillChoices": []
+        },
+        {
+          "level": 4,
+          "name": "Second Nature",
+          "description": "<p><span class=\"fontstyle0\">Rather than Focus on a Summon, you can choose for it to remain for Cd4 Rounds.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 5,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 1,
+          "skillChoices": []
+        },
+        {
+          "level": 6,
+          "name": "Avatar Emergence",
+          "description": "<p><span class=\"fontstyle0\">Once per Shift, you can conjure a Summon without Mana to conjure it.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 7,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 1,
+          "skillChoices": []
+        },
+        {
+          "level": 8,
+          "name": "Guardian Force",
+          "description": "<p><span class=\"fontstyle0\">If you drop to 0 HP while you have a Summon conjured, the Summon remains for Cd4 Rounds. If the Summon isn't banished before this die shrinks, you are revived at 1 HP and gain 1 Fatigue.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 9,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 1,
+          "skillChoices": []
+        },
+        {
+          "level": 10,
+          "name": "Ultimate Weapon",
+          "description": "<p><span class=\"fontstyle0\">You can conjure Summons with HD as high as (your Summoner Level + 5).</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ],
+      "suggestedStartingPacks": [],
+      "levelSpells": [
+        {
+          "spells": 0,
+          "level": 1
+        },
+        {
+          "spells": 0,
+          "level": 2
+        },
+        {
+          "spells": 0,
+          "level": 3
+        },
+        {
+          "spells": 0,
+          "level": 4
+        },
+        {
+          "spells": 0,
+          "level": 5
+        },
+        {
+          "spells": 0,
+          "level": 6
+        },
+        {
+          "spells": 0,
+          "level": 7
+        },
+        {
+          "spells": 0,
+          "level": 8
+        },
+        {
+          "spells": 0,
+          "level": 9
+        },
+        {
+          "spells": 0,
+          "level": 10
+        }
+      ]
+    },
+    "effects": [],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774273852228,
+      "modifiedTime": 1774274680291,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "ANrChhhh8gaInVLO",
+    "sort": 300000
+  },
+  {
+    "name": "Samurai",
+    "type": "class",
+    "img": "icons/weapons/swords/greatsword-guard-gold.webp",
+    "system": {
+      "description": "<p><strong>The opportunity of defeating the enemy is provided by the enemy himself.</strong></p><p><em>– Sun Tzu, The Art of War</em></p><p>Samurai are an array of warriors with the common code of honor, and whose patient will subdues blind aggression.</p><h3>Iconic Samurai</h3><ul><li><strong>Auron</strong>, <em>Final Fantasy X</em></li><li><strong>The Bride</strong>, <em>Kill Bill</em></li><li><strong>Cyan Garamonde</strong>, <em>Final Fantasy VI</em></li><li><strong>Mugen and Jin</strong>, <em>Samurai Champloo</em></li><li><strong>Oda Nobunaga</strong>, Japanese Daimyo</li></ul><h3>Playing Samurai</h3><p>Samurai excel at melee confrontation, encouraging Enemies to swing at them for an opportunity to exploit their mistakes.</p><p><strong>Action:</strong> Attack/Hold<br /><strong>Move:</strong> Frontline<br /><strong>Starting Pack:</strong> Sellsword<br /><strong>Key Stat:</strong> Might<br /><strong>Complexity:</strong> ★★★★☆</p><h3>Training</h3><p><strong>Weapons:</strong> Melee<br /><strong>Skills:</strong> Detect and 3 others</p><p></p><h3><span class=\"fontstyle0\">Class Features</span></h3><table class=\"NormalTable\"><tbody><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Level</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Features</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Bushido</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">1st</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Dust Into Mountains, Bushido</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">1</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">2nd</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Stillness of Body</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">1</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">3rd</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">1</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">4th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Poise Breaker</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">2</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">5th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">2</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">6th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Stillness of Mind</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">2</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">7th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">3</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">8th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">For Honor</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">3</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">9th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">3</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">10th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">–</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">4</span></p></td></tr></tbody></table><p><br style=\"font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:normal;orphans:2;text-align:-webkit-auto;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;-webkit-text-size-adjust:auto;-webkit-text-stroke-width:0px\" /></p>",
+      "isSpellcaster": false,
+      "levelFeatures": [
+        {
+          "level": 1,
+          "name": "Bushido",
+          "description": "<p><span class=\"fontstyle0\">Keen Melee Weapons have the Brutal and Shield properties for you, and they ignore 1 of your Target's Armor. This number increases by 1 every 3 Samurai Levels hereafter.</span></p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 1,
+          "name": "Dust Into Mountains",
+          "description": "<p><span class=\"fontstyle0\">You gain the Perfect Parry Perk, and you can make two attacks if you attack with an Action granted by a Crit on a Save.</span></p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 2,
+          "name": "Stillness of Body",
+          "description": "<p><span class=\"fontstyle0\">While you aren't Incapacitated and have a firm footing, you can't be pushed or pulled by another Being less than two sizes larger than you against your will.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 3,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 4,
+          "name": "Poise Breaker",
+          "description": "<p><span class=\"fontstyle0\">The roll for you to Crit to Block is reduced by (your Samurai Level divided by 4) while you have a Keen Weapon equipped.</span></p><p><span class=\"fontstyle0\">Further, if you hit with an attack that exceeds your Difficulty by 10 or more, the Target's Armor is reduced by your Bushido for the rest of the Turn.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 5,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 6,
+          "name": "Stillness of Mind",
+          "description": "<p><span class=\"fontstyle0\">You can't be Berserk, Charmed, Confused, Dazed, or Frightened against your will.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 7,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 8,
+          "name": "For Honor",
+          "description": "<p><span class=\"fontstyle0\">Once per Shift, if you drop to 0 HP, you don't die and can immediately take an Action and Move as if it were your Turn. If you defeat an Enemy with this Action, you are at 1 HP instead. Otherwise, you die.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 9,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 10,
+          "name": "Bushido",
+          "description": "<p><span class=\"fontstyle0\">Your Bushido increases to 4. Keen Melee Weapons have the Brutal and Shield properties for you, and they ignore 4 of your Target's Armor.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ],
+      "manaSkill": null,
+      "castingStat": null,
+      "manaMultiplier": 0,
+      "skillGrant": {
+        "guaranteed": [
+          "melee",
+          "detect"
+        ],
+        "choices": [
+          {
+            "count": 3,
+            "pool": [],
+            "label": ""
+          }
+        ]
+      },
+      "levelSpells": [],
+      "keyStats": [
+        "might"
+      ],
+      "suggestedStartingPacks": [
+        "Compendium.vagabond.starting-packs.Item.jA8rBPY7BGjXJvcD"
+      ]
+    },
+    "effects": [
+      {
+        "name": "Poise Breaker (lvl. 4|8)",
+        "origin": null,
+        "img": "icons/svg/aura.svg",
+        "_id": "qR7kPsBrkr01xY2z",
+        "type": "base",
+        "system": {},
+        "changes": [
+          {
+            "key": "system.endureCritBonus",
+            "mode": 2,
+            "value": "(@lvl >= 4) ? -1 : 0",
+            "priority": null
+          },
+          {
+            "key": "system.endureCritBonus",
+            "mode": 2,
+            "value": "(@lvl >= 8) ? -1 : 0",
+            "priority": null
+          }
+        ],
+        "disabled": false,
+        "duration": {
+          "startTime": null,
+          "combat": null,
+          "seconds": null,
+          "rounds": null,
+          "turns": null,
+          "startRound": null,
+          "startTurn": null
+        },
+        "description": "",
+        "tint": "#ffffff",
+        "transfer": true,
+        "statuses": [],
+        "sort": 0,
+        "flags": {
+          "vagabond": {
+            "applicationMode": "permanent"
+          }
+        },
+        "_stats": {
+          "compendiumSource": null,
+          "duplicateSource": null,
+          "exportSource": null,
+          "coreVersion": "13.351",
+          "systemId": "vagabond",
+          "systemVersion": "5.1.3",
+          "lastModifiedBy": null
+        }
+      }
+    ],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774268541057,
+      "modifiedTime": 1774274680291,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "JJGHt0g0q6NZN2Jd",
+    "sort": 600000
+  },
+  {
+    "name": "Jester",
+    "type": "class",
+    "img": "icons/sundries/misc/piggybank.webp",
+    "system": {
+      "description": "<p><strong>The secret of the successful fool is that he's no fool at all.</strong></p><p><em>– Isaac Asimov</em></p><p>Jesters are masters of the art of imitation and wit. They are able to tap into Fate itself to goad and mimic others in a seemingly supernatural way.</p><h3>Iconic Jesters</h3><ul><li><strong>Buggy</strong>, <em>One Piece</em></li><li><strong>Jester</strong>, <em>Darkest Dungeon</em></li><li><strong>Kefka</strong>, <em>Final Fantasy VI</em></li><li><strong>Kinch Na Shannock</strong>, <em>Blacktongue Thief</em></li></ul><h3>Playing Jester</h3><p>Jesters are obnoxious midliners who attempt to goad their enemies away from the more serious threats on the battlefield.</p><p><strong>Action:</strong> Mimicry/Provoker<br /><strong>Move:</strong> Midline<br /><strong>Starting Pack:</strong> –<br /><strong>Key Stat:</strong> Presence, Luck<br /><strong>Complexity:</strong> ★★★☆☆</p><h3>Training</h3><p><strong>Weapons:</strong> Melee<br /><strong>Skills:</strong> Performance and 3 others</p><p></p><h3><span class=\"fontstyle0\">Class Features</span></h3><table class=\"NormalTable\"><tbody><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Level</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Features</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">1st</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Sickle &amp; Lute, Mockery</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">2nd</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Tricky Maneuvers</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">3rd</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">4th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Lucky Streak</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">5th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">6th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Sickle &amp; Lute Enhancement</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">7th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">8th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perfect Goad</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">9th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">10th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Finale</span></p></td></tr></tbody></table><p><br style=\"font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:normal;orphans:2;text-align:-webkit-auto;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;-webkit-text-size-adjust:auto;-webkit-text-stroke-width:0px\" /></p>",
+      "isSpellcaster": false,
+      "manaMultiplier": 0,
+      "manaSkill": null,
+      "castingStat": null,
+      "keyStats": [
+        "presence"
+      ],
+      "skillGrant": {
+        "guaranteed": [
+          "melee",
+          "performance"
+        ],
+        "choices": [
+          {
+            "count": 3,
+            "pool": [],
+            "label": ""
+          }
+        ]
+      },
+      "levelFeatures": [
+        {
+          "level": 1,
+          "name": "Sickle & Lute",
+          "description": "<p><span class=\"fontstyle0\">You gain either the Virtuoso Feature of the Bard, or the Sneak Attack Feature of the Rogue. You use your Jester Levels for those Class Levels.</span></p><p><span class=\"fontstyle0\">When you become a 6th Level Jester, you gain the Feature you did not choose.</span></p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 1,
+          "name": "Mockery",
+          "description": "<p><span class=\"fontstyle0\">You gain the Provoker Perk, and can use its effect by skipping your Move, and against all Near Beings of your choice who can hear or see you.</span></p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 2,
+          "name": "Tricky Maneuvers",
+          "description": "<p><span class=\"fontstyle0\">The roll for you to Crit on Reflex Saves is reduced by an amount equal to (your Jester Level divided by 4, round up).</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 3,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 4,
+          "name": "Lucky Streak",
+          "description": "<p><span class=\"fontstyle0\">If you Crit, you gain 2 Luck, rather than 1. Further, if you have no Luck during a Breather, you gain 1 Luck.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 5,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 6,
+          "name": "Sickle & Lute Enhancement",
+          "description": "<p><span class=\"fontstyle0\">You gain the Feature you did not choose at 1st Level (either the Virtuoso Feature of the Bard, or the Sneak Attack Feature of the Rogue).</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 7,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 8,
+          "name": "Perfect Goad",
+          "description": "<p><span class=\"fontstyle0\">You can choose one Being goaded with your Provoker Perk. All of your Allies' Saves against the Target's attacks Crit on a roll that exceeds their Difficulty by 10 or more while you Focus on this Ability. You must spend 1 Luck each time you Focus on this Ability.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 9,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 10,
+          "name": "Finale",
+          "description": "<p><span class=\"fontstyle0\">You gain either the Climax Feature of the Bard or the Lethal Weapon Feature of the Rogue.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ],
+      "suggestedStartingPacks": [],
+      "levelSpells": []
+    },
+    "effects": [
+      {
+        "name": "Tricky Maneuvers (lvl. 2|5|9)",
+        "origin": null,
+        "img": "icons/svg/aura.svg",
+        "_id": "jTr1ckyM4n3uv3rs",
+        "type": "base",
+        "system": {},
+        "changes": [
+          {
+            "key": "system.reflexCritBonus",
+            "mode": 2,
+            "value": "-1",
+            "priority": null
+          },
+          {
+            "key": "system.reflexCritBonus",
+            "mode": 2,
+            "value": "(@lvl >= 5) ? -1 : 0",
+            "priority": null
+          },
+          {
+            "key": "system.reflexCritBonus",
+            "mode": 2,
+            "value": "(@lvl >= 9) ? -1 : 0",
+            "priority": null
+          }
+        ],
+        "disabled": false,
+        "duration": {
+          "startTime": null,
+          "combat": null,
+          "seconds": null,
+          "rounds": null,
+          "turns": null,
+          "startRound": null,
+          "startTurn": null
+        },
+        "description": "",
+        "tint": "#ffffff",
+        "transfer": true,
+        "statuses": [],
+        "sort": 0,
+        "flags": {
+          "vagabond": {
+            "applicationMode": "permanent"
+          }
+        },
+        "_stats": {
+          "compendiumSource": null,
+          "duplicateSource": null,
+          "exportSource": null,
+          "coreVersion": "13.351",
+          "systemId": "vagabond",
+          "systemVersion": "5.1.3",
+          "lastModifiedBy": null
+        }
+      }
+    ],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774274680269,
+      "modifiedTime": 1774274680291,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "RoB9Q5VN2ZoQBDs7",
+    "sort": 200000
+  },
+  {
+    "name": "Psychic",
+    "type": "class",
+    "img": "icons/magic/control/hypnosis-mesmerism-swirl.webp",
+    "system": {
+      "description": "<p><strong>Let it explode.</strong></p><p><em>– Subway Ghost, Ghost</em></p><p>Psychics harness powers of the mind to control the world around them.</p><h3>Iconic Psychics</h3><ul><li><strong>Eleven</strong>, <em>Stranger Things</em></li><li><strong>Jesse Faden</strong>, <em>Control</em></li><li><strong>Prof. Charles Xavier</strong>, <em>X-Men</em></li></ul><h3>Playing Psychic</h3><p>The psychic is a feeble controller focused on their use of Talents.</p><p><strong>Action:</strong> Cast (Talents)<br /><strong>Move:</strong> Backline<br /><strong>Starting Pack:</strong> Fortune Teller<br /><strong>Key Stat:</strong> Awareness<br /><strong>Complexity:</strong> ★★★☆☆</p><h3>Training</h3><p><strong>Weapons:</strong> –<br /><strong>Skills:</strong> Mysticism, and 4 others</p><p></p><h3><span class=\"fontstyle0\">Class Features</span></h3><table class=\"NormalTable\"><tbody><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Level</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Features</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Talents</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">1st</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Psionics, Awakening</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">3</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">2nd</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Precognition</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">3</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">3rd</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">4</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">4th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Duality (2 Talents)</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">4</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">5th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">5</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">6th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Mental Fortress</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">5</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">7th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">6</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">8th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Duality (3 Talents)</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">6</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">9th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">7</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"50\"><p><span class=\"fontstyle2\">10th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Transcendence</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"55\"><p><span class=\"fontstyle2\">7</span></p></td></tr></tbody></table><h3>Talents</h3><p><strong>Absence (Focus):</strong> You are Invisible.<br /><strong>Ascend:</strong> Acts as the Levitate Spell.<br /><strong>Befuddle:</strong> Acts as the Confuse Spell.<br /><strong>Control:</strong> Acts as the Animate Spell.<br /><strong>Cryokinesis:</strong> Acts as the Freeze Spell.<br /><strong>Destroy:</strong> Acts as the Disintegrate Spell.<br /><strong>Evade (Focus):</strong> Grants a d4 Reflex bonus.<br /><strong>Launch:</strong> Acts as the Kinesis Spell.<br /><strong>Manifest:</strong> Acts as the Forge Spell.<br /><strong>Mediumship:</strong> Acts as the Speak Spell.<br /><strong>Pyrokinesis:</strong> Acts as the Burn Spell.<br /><strong>Seize:</strong> Acts as the Charm Spell.<br /><strong>Shield (Focus):</strong> Grants a d4 Armor bonus.<br /><strong>Transvection (Focus):</strong> You have Fly.</p>",
+      "isSpellcaster": false,
+      "manaMultiplier": 0,
+      "manaSkill": null,
+      "castingStat": "awareness",
+      "keyStats": [
+        "awareness"
+      ],
+      "skillGrant": {
+        "guaranteed": [
+          "mysticism"
+        ],
+        "choices": [
+          {
+            "count": 4,
+            "pool": [],
+            "label": ""
+          }
+        ]
+      },
+      "levelFeatures": [
+        {
+          "level": 1,
+          "name": "Psionics",
+          "description": "<p><span class=\"fontstyle0\">You gain 3 Talents from the list below, and 1 new Talent every 2 Psychic Levels hereafter.</span></p><p><span class=\"fontstyle0\"><strong>As Spells:</strong> You use Mysticism for Talents, and you can Cast it as if you had spent Mana up to (half your Psychic Level).</span></p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 1,
+          "name": "Awakening",
+          "description": "<p><span class=\"fontstyle0\">You gain the Telepath Perk, and can use your mind as a Trinket.</span></p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 2,
+          "name": "Precognition",
+          "description": "<p><span class=\"fontstyle0\">Your first Save each Round is Favored while you are Focusing.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 3,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 4,
+          "name": "Duality",
+          "description": "<p><span class=\"fontstyle0\">You can Focus on two Talents at once.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 5,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 6,
+          "name": "Mental Fortress",
+          "description": "<p><span class=\"fontstyle0\">You can't be Berserk, Charmed, Confused, or Frightened against your will.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 7,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 8,
+          "name": "Duality",
+          "description": "<p><span class=\"fontstyle0\">You can Focus on up to three Talents at once.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 9,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 10,
+          "name": "Transcendence",
+          "description": "<p><span class=\"fontstyle0\">You can use your Action or skip your Move to change one of your Talents.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ],
+      "suggestedStartingPacks": [],
+      "levelSpells": []
+    },
+    "effects": [],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774270315060,
+      "modifiedTime": 1774274680291,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "XDFLTeYYprqVxGsF",
+    "sort": 500000
+  },
+  {
+    "name": "Monk",
+    "type": "class",
+    "img": "icons/skills/melee/unarmed-punch-fist.webp",
+    "system": {
+      "description": "<p><strong>I fear not the man who has practiced 10,000 kicks once, but I fear the man who has practiced one kick 10,000 times.</strong></p><p><em>– Bruce Lee</em></p><p>Warriors who pass down traditions of martial arts, monks are swift brawlers and mystics. They shuck raw damage for skills to lock down threats.</p><h3>Iconic Monks</h3><ul><li><strong>Bruce Lee</strong></li><li><strong>Dhalsim</strong>, <em>Street Fighter series</em></li><li><strong>Spike Spiegel</strong>, <em>Cowboy Bebop</em></li><li><strong>Shang-Chi</strong>, <em>Marvel</em></li><li><strong>Tifa Lockhart</strong>, <em>Final Fantasy VII</em></li></ul><h3>Playing Monk</h3><p>Monk is a flexible midline striker and controller, utilizing Martial Arts to lock down foes while weaving through attacks.</p><p><strong>Action:</strong> Attack (Finesse)<br /><strong>Move:</strong> Flexible Frontline/Midline<br /><strong>Starting Pack:</strong> Monk<br /><strong>Key Stat:</strong> Dexterity<br /><strong>Complexity:</strong> ★★★☆☆</p><h3>Training</h3><p><strong>Weapons:</strong> –<br /><strong>Skills:</strong> Finesse and Mysticism, and 2 others</p><p></p><h3><span class=\"fontstyle0\">Class Features</span></h3><table class=\"NormalTable\"><tbody><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Level</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle0\" style=\"color:rgb(255,255,255);font-size:9pt\">Features</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">1st</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Martial Arts, Fleet of Foot</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">2nd</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Fluid Motion</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">3rd</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">4th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Impetus</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">5th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">6th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Flurry of Blows (2 attacks)</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">7th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">8th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Empowered Strikes</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">9th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Perk</span></p></td></tr><tr><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"67\"><p><span class=\"fontstyle2\">10th</span></p></td><td style=\"border-left-style:none;border-bottom-style:none;border-right-style:none;border-top-style:none\" data-colwidth=\"115\"><p><span class=\"fontstyle2\">Flurry of Blows (3 attacks)</span></p></td></tr></tbody></table><p><br style=\"font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:normal;orphans:2;text-align:-webkit-auto;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;-webkit-text-size-adjust:auto;-webkit-text-stroke-width:0px\" /></p>",
+      "isSpellcaster": false,
+      "manaMultiplier": 0,
+      "manaSkill": null,
+      "castingStat": null,
+      "keyStats": [
+        "dexterity"
+      ],
+      "skillGrant": {
+        "guaranteed": [
+          "finesse",
+          "mysticism"
+        ],
+        "choices": [
+          {
+            "count": 2,
+            "pool": [],
+            "label": ""
+          }
+        ]
+      },
+      "levelFeatures": [
+        {
+          "level": 1,
+          "name": "Martial Arts",
+          "description": "<p><span class=\"fontstyle0\">You can use a d4 for Finesse Weapons and, once per Round, you can spend half your Speed to make a second Finesse attack rather than skip your Move.</span></p><p><span class=\"fontstyle0\">Further, when you hit with a Finesse attack, you can either:</span></p><ul><li><span class=\"fontstyle0\">Apply the Keen Property or, if Close to the Target, the Cleave Property.</span></li><li><span class=\"fontstyle0\">Increase the size of your subsequent Finesse attack damage dice this Round, but no higher than a d12.</span></li></ul>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 1,
+          "name": "Fleet of Foot",
+          "description": "<p><span class=\"fontstyle0\">You gain the Treads Lightly Perk (p. 73), and the roll for you to Crit on Reflex Saves is reduced by an amount equal to (your Monk Level divided by 4, round up).</span></p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [
+            "Compendium.vagabond.perks.Item.uic2nm5LlKKwoFDQ"
+          ],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 2,
+          "name": "Fluid Motion",
+          "description": "<p><span class=\"fontstyle0\">During your Move, you can walk on liquid surfaces and along walls, sinking or falling if you end the Move off solid ground.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 3,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 4,
+          "name": "Impetus",
+          "description": "<p><span class=\"fontstyle0\">If you pass a Save to Dodge, you ignore two of the highest rolled damage dice, rather than one.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 5,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 6,
+          "name": "Flurry of Blows",
+          "description": "<p><span class=\"fontstyle0\">Once per Round, you can make an extra Finesse attack when you either attack with a Finesse Weapon or spend half your Speed. Every 4 Monk Levels hereafter, you can make this extra Finesse attack one additional time per Round.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 7,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 8,
+          "name": "Empowered Strikes",
+          "description": "<p><span class=\"fontstyle0\">You can use a d6 for the damage die of your Finesse Weapons.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 9,
+          "name": "Perk",
+          "description": "<p>Choose a new Perk. You must meet the prerequisites to take it, unless the Perk is granted through a Class Feature.</p>",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 1,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "level": 10,
+          "name": "Flurry of Blows",
+          "description": "<p><span class=\"fontstyle0\">Once per Round, you can make an extra Finesse attack when you either attack with a Finesse Weapon or spend half your Speed. Every 4 Monk Levels hereafter, you can make this extra Finesse attack one additional time per Round. At 10th Level, you can make this extra attack up to 3 times per Round.</span></p>",
+          "statBonusPoints": 1,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ],
+      "suggestedStartingPacks": [],
+      "levelSpells": []
+    },
+    "effects": [
+      {
+        "name": "Fleet of Foot (lvl. 1|5|9)",
+        "origin": null,
+        "img": "icons/svg/aura.svg",
+        "_id": "xMW83wigY3ur6QFd",
+        "type": "base",
+        "system": {},
+        "changes": [
+          {
+            "key": "system.reflexCritBonus",
+            "mode": 2,
+            "value": "-1",
+            "priority": null
+          },
+          {
+            "key": "system.reflexCritBonus",
+            "mode": 2,
+            "value": "(@lvl >= 5) ? -1 : 0",
+            "priority": null
+          },
+          {
+            "key": "system.reflexCritBonus",
+            "mode": 2,
+            "value": "(@lvl >= 9) ? -1 : 0",
+            "priority": null
+          }
+        ],
+        "disabled": false,
+        "duration": {
+          "startTime": null,
+          "combat": null,
+          "seconds": null,
+          "rounds": null,
+          "turns": null,
+          "startRound": null,
+          "startTurn": null
+        },
+        "description": "",
+        "tint": "#ffffff",
+        "transfer": true,
+        "statuses": [],
+        "sort": 0,
+        "flags": {
+          "vagabond": {
+            "applicationMode": "permanent"
+          }
+        },
+        "_stats": {
+          "compendiumSource": null,
+          "duplicateSource": null,
+          "exportSource": null,
+          "coreVersion": "13.351",
+          "systemId": "vagabond",
+          "systemVersion": "5.1.3",
+          "lastModifiedBy": null
+        }
+      }
+    ],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774267935353,
+      "modifiedTime": 1774274680291,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "kZYvSdrdLYjhiO6q",
+    "sort": 400000
+  }
+]

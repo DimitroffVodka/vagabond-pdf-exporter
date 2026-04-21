@@ -16,7 +16,10 @@ import OBR from "./vendor/obr-sdk.js";
 
     // Bump CACHE_VERSION whenever the parser schema changes so old caches
     // don't linger on upgraded clients.
-    const COMPENDIUM_CACHE_VERSION = 5;
+    const COMPENDIUM_CACHE_VERSION = 6;
+    // VCE content snapshots live in our own repo — same-origin fetches, no
+    // proxy needed. Re-run the Foundry macro (see README) to regenerate.
+    const VCE_FILES = ["perks", "classes", "ancestries"];
     const COMPENDIUM_CACHE_KEY = "vagabond-pdf-exporter:compendium-cache:v" + COMPENDIUM_CACHE_VERSION;
     const COMPENDIUM_TTL_MS = 24 * 60 * 60 * 1000;
     const COMPENDIUM_HOST = "https://vagabond-extension.onrender.com";
@@ -137,14 +140,76 @@ import OBR from "./vendor/obr-sdk.js";
       return { byName, byItem };
     }
 
+    // Minimal HTML stripper for Foundry-authored rich-text descriptions.
+    function stripHtmlToText(html) {
+      if (!html) return "";
+      const div = document.createElement("div");
+      div.innerHTML = String(html);
+      return div.textContent.replace(/\s+\n/g, "\n").replace(/[ \t]{2,}/g, " ").trim();
+    }
+
+    // Load our committed VCE JSON snapshots and merge:
+    //   - descriptions go into the byName pool (same shape as Alyx entries)
+    //   - structured ancestry traits and class levelFeatures are kept in
+    //     separate sub-maps so the mapper can decompose them into multiple
+    //     abilities per character.
+    // Alyx-originated entries win on same-name collision (our canonical data);
+    // VCE fills any gaps (Heightened Intellect, custom ancestries, etc.).
+    async function mergeVceContent(entries) {
+      const vceAncestries = {};
+      const vceClasses = {};
+      for (const kind of VCE_FILES) {
+        try {
+          const res = await fetch("data/vce/" + kind + ".json");
+          if (!res.ok) continue;
+          const arr = await res.json();
+          if (!Array.isArray(arr)) continue;
+          for (const doc of arr) {
+            if (!doc?.name) continue;
+            const key = String(doc.name).toLowerCase().trim();
+            const desc = stripHtmlToText(doc.system?.description);
+            if (desc && !entries.byName[key]) {
+              entries.byName[key] = { description: desc, type: null };
+            }
+            if (doc.type === "ancestry" && Array.isArray(doc.system?.traits)) {
+              vceAncestries[key] = {
+                description: desc,
+                ancestryType: doc.system?.ancestryType || null,
+                size: doc.system?.size || null,
+                traits: doc.system.traits
+                  .filter(t => t?.name)
+                  .map(t => ({ name: t.name, description: stripHtmlToText(t.description) })),
+              };
+            }
+            if (doc.type === "class" && Array.isArray(doc.system?.levelFeatures)) {
+              vceClasses[key] = {
+                description: desc,
+                isSpellcaster: !!doc.system?.isSpellcaster,
+                levelFeatures: doc.system.levelFeatures
+                  .filter(f => f?.name)
+                  .map(f => ({
+                    level: Number(f.level) || 1,
+                    name: f.name,
+                    description: stripHtmlToText(f.description),
+                  })),
+              };
+            }
+          }
+        } catch (e) {
+          console.warn("VCE " + kind + " load failed:", e.message);
+        }
+      }
+      entries.vceAncestries = vceAncestries;
+      entries.vceClasses = vceClasses;
+      return entries;
+    }
+
     async function fetchCompendium() {
       // Discover current bundle hash from index.html (hash changes on rebuild)
       const proxy = u => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u);
       const indexRes = await fetch(proxy(COMPENDIUM_HOST + "/"));
       if (!indexRes.ok) throw new Error("index HTTP " + indexRes.status);
       const indexHtml = await indexRes.text();
-      // codetabs (and similar proxies) sometimes return HTTP 200 with a JSON
-      // error body when the upstream is unreachable or the quota is exceeded
       if (indexHtml.startsWith("{") && /"error"\s*:/.test(indexHtml)) {
         throw new Error("proxy error body: " + indexHtml.slice(0, 120));
       }
@@ -158,6 +223,7 @@ import OBR from "./vendor/obr-sdk.js";
         throw new Error("proxy error body on bundle: " + js.slice(0, 120));
       }
       const entries = parseCompendium(js);
+      await mergeVceContent(entries);
       try {
         localStorage.setItem(COMPENDIUM_CACHE_KEY, JSON.stringify({
           bundleUrl, fetchedAt: Date.now(), entries,
@@ -255,7 +321,52 @@ import OBR from "./vendor/obr-sdk.js";
 
         return null;
       };
-      // Abilities are perks / class features / ancestry traits -> byName pool
+      // Abilities are perks / class features / ancestry traits -> byName pool.
+      // Two-pass: first decompose any "ancestry" or "class" pseudo-abilities
+      // that we have structured VCE data for, THEN hydrate plain descriptions.
+      const vceAncestries = pools.vceAncestries || {};
+      const vceClasses = pools.vceClasses || {};
+      const ancestryKey = (char.ancestry || "").toLowerCase().trim();
+      const classKey = (char.class || "").toLowerCase().trim();
+      const charLevel = Number(char.level) || 1;
+
+      // Collect abilities into an ordered array so we can splice in decomposed entries.
+      const abilityList = Object.values(char.abilities || {}).sort((a, b) => (a.order || 0) - (b.order || 0));
+      const expanded = [];
+      for (const ab of abilityList) {
+        const abKey = (ab.name || "").toLowerCase().trim();
+        const matchedAncestry = abKey === ancestryKey && vceAncestries[ancestryKey];
+        const matchedClass = abKey === classKey && vceClasses[classKey];
+        if (matchedAncestry) {
+          // Ancestry block becomes one "Ancestry: <name>" entry plus each trait
+          expanded.push({ name: ab.name, description: matchedAncestry.description || "" });
+          for (const t of matchedAncestry.traits) {
+            expanded.push({ name: t.name, description: t.description });
+          }
+        } else if (matchedClass) {
+          expanded.push({ name: ab.name, description: matchedClass.description || "" });
+          for (const f of matchedClass.levelFeatures) {
+            if (f.level <= charLevel) {
+              expanded.push({ name: f.name, description: f.description });
+            }
+          }
+        } else {
+          expanded.push(ab);
+        }
+      }
+      // Rebuild char.abilities from the expanded list, preserving order
+      char.abilities = {};
+      expanded.forEach((e, i) => {
+        const id = e.id || uid();
+        char.abilities[id] = {
+          id,
+          name: e.name,
+          description: e.description || "",
+          order: i,
+        };
+      });
+
+      // Second pass: fill any still-empty descriptions from the byName pool
       for (const id in (char.abilities || {})) {
         const ab = char.abilities[id];
         if (!ab.description) {

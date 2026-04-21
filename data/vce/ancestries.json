@@ -1,0 +1,941 @@
+[
+  {
+    "name": "Harpy",
+    "type": "ancestry",
+    "img": "icons/magic/holy/angel-winged-humanoid-blue.webp",
+    "system": {
+      "description": "<p><span class=\"fontstyle0\">Born in nests in the tallest trees of the highest mountains, harpies are avian creatures with human-like faces. They have an innate ability to lure-in others, which has been used to draw their prey off the sides of cliffs and mountains.</span></p>",
+      "size": "medium",
+      "ancestryType": "Cryptid",
+      "traits": [
+        {
+          "name": "Harpy Flight",
+          "description": "While your arms are free and your Slots are no more than half occupied, you can use an Action and begin Focusing to gain Fly until your Focus on this Ability ends.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Enthralling Song",
+          "description": "Your voice counts as a Trinket for Casting. You also know the Charm Spell, and can Cast it with a Skill of your choice.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ]
+    },
+    "effects": [],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774575815251,
+      "modifiedTime": 1774577461878,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "BjXxUNNa5eW3tr0D",
+    "sort": 1100000
+  },
+  {
+    "name": "Fiend",
+    "type": "ancestry",
+    "img": "icons/creatures/unholy/demon-horned-winged-laughing.webp",
+    "system": {
+      "description": "<p><span class=\"fontstyle0\">Descending from the Hellspawn of Infernal Realms, Fiends always have an easy tell, growing horns, having hypersaturated hues of skin tones, or growing devilish tails.</span></p>",
+      "size": "medium",
+      "ancestryType": "Outers",
+      "traits": [
+        {
+          "name": "Darksight",
+          "description": "You aren't Blinded by Dark.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Abyssal Magics",
+          "description": "You know either the Burn, Frostburn, or Gas Spell and can Cast it with a Skill of your choice.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Devilish Resilience",
+          "description": "You reduce damage you take of the Spell chosen of your Abyssal Magics Ability by (half your Level, round up).",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ]
+    },
+    "effects": [],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774575980109,
+      "modifiedTime": 1774577461878,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "ForHSE0EAfsS8uI9",
+    "sort": 700000
+  },
+  {
+    "name": "Mimic",
+    "type": "ancestry",
+    "img": "icons/sundries/books/book-mimic.webp",
+    "system": {
+      "description": "<p><span class=\"fontstyle0\">Every once and a while, the spark of magic that animates a mimic grants it sentience and a will to act beyond mere hunting instinct. While they are rarely known to ever leave their home dungeon, this spark might cause curiosity and a sense of wonder.</span></p>",
+      "size": "medium",
+      "ancestryType": "Cryptid",
+      "traits": [
+        {
+          "name": "Darksight",
+          "description": "You have Darksight.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Bite",
+          "description": "Your Bite is a d6 Weapon with the Brawl, Brutal, and Entangle Properties.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Mimicry",
+          "description": "You can use your Action and begin Focusing on this Ability to morph your appearance into an Object of your size or smaller that you have seen until the Focus ends.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ]
+    },
+    "effects": [],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774577004412,
+      "modifiedTime": 1774577461878,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "LP0pQYvX5gwtcP76",
+    "sort": 400000
+  },
+  {
+    "name": "Satyr",
+    "type": "ancestry",
+    "img": "icons/creatures/mammals/goat-horned-blue.webp",
+    "system": {
+      "description": "<p></p>",
+      "size": "medium",
+      "ancestryType": "Fae",
+      "traits": [
+        {
+          "name": "Fae Weakness",
+          "description": "You are Weak to damage from Cold Iron Weapons.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Magic Ward",
+          "description": "The first time you are unwillingly affected by a Cast Action each Round, you have Favor on the Save.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Satyr Magic",
+          "description": "You can use Musical Instruments as a Trinket, and can Cast Spells using Performance if you do. Further, know either the Charm, Sleep, or Fear Spell, and can Cast it with a Skill of your choice.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ]
+    },
+    "effects": [],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774577355363,
+      "modifiedTime": 1774577461878,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "LzQg12d0db5oVL2P",
+    "sort": 300000
+  },
+  {
+    "name": "Varmi",
+    "type": "ancestry",
+    "img": "icons/creatures/mammals/rodent-rat-diseaed-gray.webp",
+    "system": {
+      "description": "<p><span class=\"fontstyle0\">Rat-like rodentmen who thrive in the worst of environments. Some worlds have them taking up worship of plague gods, inhabiting the sewers of urban areas, or sticking to the back alleys and criminal underbellies of society.</span></p>",
+      "size": "medium",
+      "ancestryType": "Beasts",
+      "traits": [
+        {
+          "name": "Claustrophilic",
+          "description": "You can Move through the space of other Beings and squeezing doesn't impede your movement.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Heightened Smell",
+          "description": "You can Focus on your sense of smell, allowing you to sense Near Beings as if by Blindsight.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Scavenger",
+          "description": "You have Favor on Endure Saves against being Sickened.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ]
+    },
+    "effects": [],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774577461864,
+      "modifiedTime": 1774577461878,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "M5LknGqrO8b9asYJ",
+    "sort": 200000
+  },
+  {
+    "name": "Centaur",
+    "type": "ancestry",
+    "img": "icons/equipment/finger/ring-horseshoe-gold-red.webp",
+    "system": {
+      "description": "<p><span class=\"fontstyle0\">Centaurs are humanoid from the waist up, and have the four legs of a horse below. While they are typically forest-dwelling folk, they are known to venture to teach in civilization.</span></p>",
+      "size": "medium",
+      "ancestryType": "Fae",
+      "traits": [
+        {
+          "name": "Burden Bearer",
+          "description": "You have +2 Slots, and Beings that are your size or smaller can ride you as a Mount. Their Inventory doesn't count toward your total Slots while they Mount you.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "One with Nature",
+          "description": "You are Trained with either Medicine, Survival, or Ranged.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": [
+            {
+              "count": 1,
+              "pool": [
+                "medicine",
+                "ranged",
+                "survival"
+              ],
+              "label": ""
+            }
+          ]
+        },
+        {
+          "name": "Swift",
+          "description": "You have a 5' bonus to Speed.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ]
+    },
+    "effects": [
+      {
+        "name": "Burden Bearer",
+        "origin": null,
+        "img": "icons/svg/aura.svg",
+        "_id": "CntBrdnBr0001xYz",
+        "type": "base",
+        "system": {},
+        "changes": [
+          {
+            "key": "system.inventory.bonusSlots",
+            "mode": 2,
+            "value": "2",
+            "priority": null
+          }
+        ],
+        "disabled": false,
+        "duration": {
+          "startTime": null,
+          "combat": null,
+          "seconds": null,
+          "rounds": null,
+          "turns": null,
+          "startRound": null,
+          "startTurn": null
+        },
+        "description": "",
+        "tint": "#ffffff",
+        "transfer": true,
+        "statuses": [],
+        "sort": 0,
+        "flags": {
+          "vagabond": {
+            "applicationMode": "permanent"
+          }
+        },
+        "_stats": {
+          "compendiumSource": null,
+          "duplicateSource": null,
+          "exportSource": null,
+          "coreVersion": "13.351",
+          "systemId": "vagabond",
+          "systemVersion": "5.1.3",
+          "lastModifiedBy": "G3pp5yzqgeNvogfL",
+          "modifiedTime": 1774802073766
+        }
+      },
+      {
+        "name": "Swift",
+        "origin": null,
+        "img": "icons/svg/aura.svg",
+        "_id": "CntSwft000001xYz",
+        "type": "base",
+        "system": {},
+        "changes": [
+          {
+            "key": "system.speed.bonus",
+            "mode": 2,
+            "value": "5",
+            "priority": null
+          }
+        ],
+        "disabled": false,
+        "duration": {
+          "startTime": null,
+          "combat": null,
+          "seconds": null,
+          "rounds": null,
+          "turns": null,
+          "startRound": null,
+          "startTurn": null
+        },
+        "description": "",
+        "tint": "#ffffff",
+        "transfer": true,
+        "statuses": [],
+        "sort": 0,
+        "flags": {
+          "vagabond": {
+            "applicationMode": "permanent"
+          }
+        },
+        "_stats": {
+          "compendiumSource": null,
+          "duplicateSource": null,
+          "exportSource": null,
+          "coreVersion": "13.351",
+          "systemId": "vagabond",
+          "systemVersion": "5.1.3",
+          "lastModifiedBy": "G3pp5yzqgeNvogfL",
+          "modifiedTime": 1774802073766
+        }
+      }
+    ],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774575583766,
+      "modifiedTime": 1774577461878,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "OOYL6pHT8zZIrBOP",
+    "sort": 1000000
+  },
+  {
+    "name": "Golem",
+    "type": "ancestry",
+    "img": "icons/environment/creatures/golem-stone-purple.webp",
+    "system": {
+      "description": "<p><span class=\"fontstyle0\">Crafted beings granted sentience through some anomalous or magical means, golems are hulking creatures of wood, metal, and stone. They are often created for the purpose of protection, servitude, and companionship by arcanists.</span></p>",
+      "size": "medium",
+      "ancestryType": "Artificials",
+      "traits": [
+        {
+          "name": "Antimagic Susceptible",
+          "description": "If you fail a Check against an antimagical effect, you are Dazed (Cd4).",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "False Life",
+          "description": "You don't need to breathe, and don't gain Fatigue from going without food or water.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Constructed Body",
+          "description": "You are Immune: Poison and you have a +1 bonus to Armor Rating.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ]
+    },
+    "effects": [
+      {
+        "name": "Constructed Body",
+        "origin": null,
+        "img": "icons/svg/aura.svg",
+        "_id": "GlmCnstBdy001xYz",
+        "type": "base",
+        "system": {},
+        "changes": [
+          {
+            "key": "system.armorBonus",
+            "mode": 2,
+            "value": "1",
+            "priority": null
+          }
+        ],
+        "disabled": false,
+        "duration": {
+          "startTime": null,
+          "combat": null,
+          "seconds": null,
+          "rounds": null,
+          "turns": null,
+          "startRound": null,
+          "startTurn": null
+        },
+        "description": "",
+        "tint": "#ffffff",
+        "transfer": true,
+        "statuses": [],
+        "sort": 0,
+        "flags": {},
+        "_stats": {
+          "compendiumSource": null,
+          "duplicateSource": null,
+          "exportSource": null,
+          "coreVersion": "13.351",
+          "systemId": "vagabond",
+          "systemVersion": "5.1.3",
+          "lastModifiedBy": null
+        }
+      }
+    ],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774576060118,
+      "modifiedTime": 1774577461878,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "QGl9JZRQWsft3OQY",
+    "sort": 900000
+  },
+  {
+    "name": "Changeling",
+    "type": "ancestry",
+    "img": "icons/creatures/reptiles/chameleon-camouflage-green-brown.webp",
+    "system": {
+      "description": "<p><span class=\"fontstyle0\">Leylines warp the environment like a river eroding rock, and the creatures that originate from these areas are warped by its influence. Such is the changeling.</span></p>",
+      "size": "medium",
+      "ancestryType": "Fae",
+      "traits": [
+        {
+          "name": "Beguiler",
+          "description": "You are Trained with Influence and have Favor on Checks to convince other Beings you are their Ally.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Doppelgang",
+          "description": "You can use your Action to assume the form of a Humanlike of any appearance you choose while you Focus on this Trait. Doing so does not transform your Equipment or change your Abilities.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ]
+    },
+    "effects": [],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774575662747,
+      "modifiedTime": 1774577461878,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "UoHnWbdbVOigVp2G",
+    "sort": 1200000
+  },
+  {
+    "name": "Pollywog",
+    "type": "ancestry",
+    "img": "icons/creatures/amphibians/bullfrog-glass-teal.webp",
+    "system": {
+      "description": "<p><span class=\"fontstyle0\">Amphibious frogfolk often found settling in swamps and other boggy areas. They tend to keep to themselves in small tribal colonies, and will fiercely defend their territories against intrusion.</span></p>",
+      "size": "medium",
+      "ancestryType": "Beasts",
+      "traits": [
+        {
+          "name": "Amphibious",
+          "description": "You have Swim and can breathe air and water.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Jumper",
+          "description": "You can leap an extra 5' horizontally or vertically when you Jump.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Tongue",
+          "description": "You can use your tongue as an attack to grab a Small Being as a Grapple, or an unsecured Object of 2 or less Slots within 10' and bring it back to you.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ]
+    },
+    "effects": [],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774577179654,
+      "modifiedTime": 1774577461878,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "iEwy6F37Cv2vrR2n",
+    "sort": 500000
+  },
+  {
+    "name": "Rook",
+    "type": "ancestry",
+    "img": "icons/equipment/head/crown-feather-brown.webp",
+    "system": {
+      "description": "<p></p>",
+      "size": "medium",
+      "ancestryType": "Beasts",
+      "traits": [
+        {
+          "name": "Flutter",
+          "description": "You don't take damage from falling if you aren't Incapacitated and your Slots aren't full.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Mimicry",
+          "description": "You can perfectly mimic voices and sounds you have previously heard.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ]
+    },
+    "effects": [],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774577281272,
+      "modifiedTime": 1774577461878,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "olF5xDyxMUnEtoxk",
+    "sort": 100000
+  },
+  {
+    "name": "Pixie",
+    "type": "ancestry",
+    "img": "icons/creatures/magical/fae-fairy-winged-glowing-green.webp",
+    "system": {
+      "description": "<p></p>",
+      "size": "small",
+      "ancestryType": "Fae",
+      "traits": [
+        {
+          "name": "Fae Weakness",
+          "description": "You are Weak to damage from Cold Iron Weapons.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Pixie Flight",
+          "description": "While your Slots are no more than half occupied, you have Fly.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Tiny",
+          "description": "Your total Slots are halved, calculated after any bonuses.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ]
+    },
+    "effects": [],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774577063951,
+      "modifiedTime": 1774577461878,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "pt9ijAlulMaKyz4S",
+    "sort": 600000
+  },
+  {
+    "name": "Lepus",
+    "type": "ancestry",
+    "img": "icons/creatures/mammals/rabbit-movement-glowing-green.webp",
+    "system": {
+      "description": "<p><span class=\"fontstyle0\">Rabbitfolk of the warren, capable of dramatic jumps and dazzling feats of speed.</span></p>",
+      "size": "medium",
+      "ancestryType": "Humanlike",
+      "traits": [
+        {
+          "name": "Jumper",
+          "description": "You can leap an extra 5' horizontally or vertically when you Jump.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Spry",
+          "description": "Your Speed is doubled during the first Round of Combat.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        },
+        {
+          "name": "Swift",
+          "description": "You have a 5' bonus to Speed.",
+          "statBonusPoints": 0,
+          "extraTraining": 0,
+          "requiredSpells": [],
+          "allowedPerks": [],
+          "perkAmount": 0,
+          "spellAmount": 0,
+          "skillChoices": []
+        }
+      ]
+    },
+    "effects": [
+      {
+        "name": "Swift",
+        "origin": null,
+        "img": "icons/svg/aura.svg",
+        "_id": "LpsSwft000001xYz",
+        "type": "base",
+        "system": {},
+        "changes": [
+          {
+            "key": "system.speed.bonus",
+            "mode": 2,
+            "value": "5",
+            "priority": null
+          }
+        ],
+        "disabled": false,
+        "duration": {
+          "startTime": null,
+          "combat": null,
+          "seconds": null,
+          "rounds": null,
+          "turns": null,
+          "startRound": null,
+          "startTurn": null
+        },
+        "description": "",
+        "tint": "#ffffff",
+        "transfer": true,
+        "statuses": [],
+        "sort": 0,
+        "flags": {
+          "vagabond": {
+            "applicationMode": "permanent"
+          }
+        },
+        "_stats": {
+          "compendiumSource": null,
+          "duplicateSource": null,
+          "exportSource": null,
+          "coreVersion": "13.351",
+          "systemId": "vagabond",
+          "systemVersion": "5.1.3",
+          "lastModifiedBy": "G3pp5yzqgeNvogfL",
+          "modifiedTime": 1774802096504
+        }
+      }
+    ],
+    "folder": null,
+    "flags": {},
+    "_stats": {
+      "compendiumSource": null,
+      "duplicateSource": null,
+      "exportSource": null,
+      "coreVersion": "13.351",
+      "systemId": "vagabond",
+      "systemVersion": "5.1.3",
+      "createdTime": 1774576888866,
+      "modifiedTime": 1774577461878,
+      "lastModifiedBy": "G3pp5yzqgeNvogfL"
+    },
+    "ownership": {
+      "default": 0,
+      "G3pp5yzqgeNvogfL": 3
+    },
+    "_id": "zKJboKpUieCwoCZf",
+    "sort": 800000
+  }
+]
