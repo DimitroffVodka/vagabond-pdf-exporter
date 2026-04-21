@@ -189,6 +189,16 @@ import OBR from "./vendor/obr-sdk.js";
           if (hit) sp.description = hit;
         }
       }
+      // Inventory items also live in the byItem pool. Only fill when empty —
+      // weapons already have their properties line (e.g. "Brutal, Thrown") in
+      // the description field, which we don't want to clobber with prose.
+      for (const id in (char.inventory || {})) {
+        const it = char.inventory[id];
+        if (!it.description) {
+          const hit = lookup(it.item, true);
+          if (hit) it.description = hit;
+        }
+      }
       return char;
     }
 
