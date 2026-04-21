@@ -645,15 +645,20 @@ import OBR from "./vendor/obr-sdk.js";
       btn.disabled = true;
       setStatus("Fetching character...", "");
       try {
-        const res = await fetch("https://www.vgbnd.app/api/characters/" + id + "?format=foundry");
+        // vgbnd.app doesn't send CORS headers, so we route through a public proxy.
+        // ?format=foundry drops spells, so fetch native shape and use the native mapper.
+        const targetUrl = "https://www.vgbnd.app/api/characters/" + id;
+        const proxyUrl = "https://corsproxy.io/?url=" + encodeURIComponent(targetUrl);
+        const res = await fetch(proxyUrl);
         if (!res.ok) {
           if (res.status === 403 || res.status === 404) {
             throw new Error("Character is private or not found. Try signing in instead.");
           }
-          throw new Error("HTTP " + res.status);
+          throw new Error("HTTP " + res.status + " from proxy");
         }
-        const foundry = await res.json();
-        const char = mapFoundryToVagabond(foundry);
+        const body = await res.json();
+        const native = body.character || body;
+        const char = mapNativeToVagabond(native);
         const metadata = await OBR.scene.getMetadata();
         const existing = { ...(metadata[METADATA_KEY] || {}) };
         existing[char.id] = char;
