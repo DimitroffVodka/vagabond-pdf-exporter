@@ -51,7 +51,7 @@ import OBR from "./vendor/obr-sdk.js";
 
     async function fetchCompendium() {
       // Discover current bundle hash from index.html (hash changes on rebuild)
-      const proxy = u => "https://corsproxy.io/?url=" + encodeURIComponent(u);
+      const proxy = u => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u);
       const indexRes = await fetch(proxy(COMPENDIUM_HOST + "/"));
       if (!indexRes.ok) throw new Error("index HTTP " + indexRes.status);
       const indexHtml = await indexRes.text();
@@ -95,6 +95,9 @@ import OBR from "./vendor/obr-sdk.js";
     async function enhanceWithCompendium(char) {
       let entries;
       try {
+        // Signal first-time fetches so users aren't staring at a silent spinner
+        const hasCache = !!localStorage.getItem(COMPENDIUM_CACHE_KEY);
+        if (!hasCache) setStatus("Fetching compendium (first time)...", "");
         entries = await getCompendium();
       } catch (e) {
         console.warn("Compendium lookup unavailable:", e.message);
@@ -771,7 +774,7 @@ import OBR from "./vendor/obr-sdk.js";
         // vgbnd.app doesn't send CORS headers, so we route through a public proxy.
         // ?format=foundry drops spells, so fetch native shape and use the native mapper.
         const targetUrl = "https://www.vgbnd.app/api/characters/" + id;
-        const proxyUrl = "https://corsproxy.io/?url=" + encodeURIComponent(targetUrl);
+        const proxyUrl = "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(targetUrl);
         const res = await fetch(proxyUrl);
         if (!res.ok) {
           if (res.status === 403 || res.status === 404) {

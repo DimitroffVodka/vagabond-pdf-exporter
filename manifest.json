@@ -2,7 +2,7 @@
   "name": "Vagabond PDF Exporter",
   "description": "Export your Vagabond character sheet to the official Hero Record PDF",
   "author": "DimitroffVodka",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "manifest_version": 1,
   "icon": "https://dimitroffvodka.github.io/vagabond-pdf-exporter/icon.svg",
   "action": {
