@@ -198,12 +198,21 @@ import OBR from "./vendor/obr-sdk.js";
           if (hit) sp.description = hit;
         }
       }
-      // Inventory items also live in the byItem pool. Only fill when empty —
-      // weapons already have their properties line (e.g. "Brutal, Thrown") in
-      // the description field, which we don't want to clobber with prose.
+      // Inventory items live in the byItem pool.
+      //   Weapons (item.damage truthy): description holds the properties list
+      //     ("Brutal, Thrown") — valuable at-a-glance on the PDF, only fill
+      //     if it was somehow left empty.
+      //   Gear/armor: native shape often sets a short desc ("Plate, splint.")
+      //     that shadows the longer compendium text. Prefer the compendium
+      //     description whenever we have one, otherwise keep the native desc.
       for (const id in (char.inventory || {})) {
         const it = char.inventory[id];
-        if (!it.description) {
+        if (it.damage) {
+          if (!it.description) {
+            const hit = lookup(it.item, true);
+            if (hit) it.description = hit;
+          }
+        } else {
           const hit = lookup(it.item, true);
           if (hit) it.description = hit;
         }
