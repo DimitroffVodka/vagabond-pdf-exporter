@@ -7,7 +7,10 @@ import OBR from "./vendor/obr-sdk.js";
 
     // --- Compendium lookup (fetches Alyx's OBR Vagabond extension bundle) ---
 
-    const COMPENDIUM_CACHE_KEY = "vagabond-pdf-exporter:compendium-cache";
+    // Bump CACHE_VERSION whenever the parser schema changes so old caches
+    // don't linger on upgraded clients.
+    const COMPENDIUM_CACHE_VERSION = 2;
+    const COMPENDIUM_CACHE_KEY = "vagabond-pdf-exporter:compendium-cache:v" + COMPENDIUM_CACHE_VERSION;
     const COMPENDIUM_TTL_MS = 24 * 60 * 60 * 1000;
     const COMPENDIUM_HOST = "https://vagabond-extension.onrender.com";
     let compendiumPromise = null;
@@ -27,26 +30,43 @@ import OBR from "./vendor/obr-sdk.js";
     }
 
     function parseCompendium(js) {
-      const map = {};
+      // Two pools because the bundle uses two entry shapes:
+      //   byName: {name:"...", description:"..."}  (perks, ancestry traits, class features, bestiary)
+      //   byItem: {id:N, item:"...", ..., description:"..."}  (spells, gear, weapons, alchemicals)
+      const byName = {};
+      const byItem = {};
+
       for (let i = 0; i < js.length - 10; i++) {
         if (js[i] !== "{") continue;
-        if (!js.startsWith('name:"', i + 1)) continue;
+
+        let shape;
+        if (js.startsWith('name:"', i + 1)) shape = "name";
+        else if (/^\{id:\d+,item:"/.test(js.slice(i, i + 32))) shape = "item";
+        else continue;
+
         const entry = parseCompendiumEntry(js, i);
         if (!entry) continue;
-        const nm = /^\{name:"((?:[^"\\]|\\.)*)"/.exec(entry);
-        if (!nm) continue;
-        const dm = /[,{]description:"((?:[^"\\]|\\.)*)"/.exec(entry);
-        if (!dm) continue;
+
+        const keyMatch = shape === "name"
+          ? /^\{name:"((?:[^"\\]|\\.)*)"/.exec(entry)
+          : /^\{id:\d+,item:"((?:[^"\\]|\\.)*)"/.exec(entry);
+        if (!keyMatch) continue;
+
+        const descMatch = /[,{]description:"((?:[^"\\]|\\.)*)"/.exec(entry);
+        if (!descMatch) continue;
+
         let name, desc;
         try {
-          name = JSON.parse('"' + nm[1] + '"');
-          desc = JSON.parse('"' + dm[1] + '"');
+          name = JSON.parse('"' + keyMatch[1] + '"');
+          desc = JSON.parse('"' + descMatch[1] + '"');
         } catch { continue; }
         if (!name || !desc) continue;
+
         const key = String(name).toLowerCase().trim();
-        if (!map[key]) map[key] = desc;
+        const pool = shape === "name" ? byName : byItem;
+        if (!pool[key]) pool[key] = desc;
       }
-      return map;
+      return { byName, byItem };
     }
 
     async function fetchCompendium() {
@@ -93,32 +113,36 @@ import OBR from "./vendor/obr-sdk.js";
     }
 
     async function enhanceWithCompendium(char) {
-      let entries;
+      let pools;
       try {
-        // Signal first-time fetches so users aren't staring at a silent spinner
         const hasCache = !!localStorage.getItem(COMPENDIUM_CACHE_KEY);
         if (!hasCache) setStatus("Fetching compendium (first time)...", "");
-        entries = await getCompendium();
+        pools = await getCompendium();
       } catch (e) {
         console.warn("Compendium lookup unavailable:", e.message);
         return char;
       }
-      const lookup = name => {
+      const byName = pools.byName || {};
+      const byItem = pools.byItem || {};
+      const lookup = (name, preferItem) => {
         if (!name) return "";
         const key = String(name).toLowerCase().trim();
-        return entries[key] || "";
+        if (preferItem) return byItem[key] || byName[key] || "";
+        return byName[key] || byItem[key] || "";
       };
+      // Abilities are perks / class features / ancestry traits -> byName pool
       for (const id in (char.abilities || {})) {
         const ab = char.abilities[id];
         if (!ab.description) {
-          const hit = lookup(ab.name);
+          const hit = lookup(ab.name, false);
           if (hit) ab.description = hit;
         }
       }
+      // Spells live in the byItem pool ({id,item,...,description})
       for (const id in (char.spells || {})) {
         const sp = char.spells[id];
         if (!sp.description) {
-          const hit = lookup(sp.name);
+          const hit = lookup(sp.name, true);
           if (hit) sp.description = hit;
         }
       }
