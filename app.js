@@ -5,6 +5,13 @@ import OBR from "./vendor/obr-sdk.js";
     let characters = [];
     let selectedId = null;
 
+    // Bridge names that vgbnd.app stores differently from Alyx's OBR compendium.
+    // Keys are lowercased vgbnd.app names; values are the compendium's
+    // canonical display name. Extend as drift is discovered.
+    const NAME_ALIASES = {
+      "heightened intellect": "Heightened Reason",
+    };
+
     // --- Compendium lookup (fetches Alyx's OBR Vagabond extension bundle) ---
 
     // Bump CACHE_VERSION whenever the parser schema changes so old caches
@@ -169,7 +176,9 @@ import OBR from "./vendor/obr-sdk.js";
       const byItem = pools.byItem || {};
       const lookup = (name, preferItem) => {
         if (!name) return "";
-        const key = String(name).toLowerCase().trim();
+        let key = String(name).toLowerCase().trim();
+        const alias = NAME_ALIASES[key];
+        if (alias) key = String(alias).toLowerCase().trim();
         if (preferItem) return byItem[key] || byName[key] || "";
         return byName[key] || byItem[key] || "";
       };
