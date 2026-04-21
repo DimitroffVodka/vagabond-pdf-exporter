@@ -5,6 +5,123 @@ import OBR from "./vendor/obr-sdk.js";
     let characters = [];
     let selectedId = null;
 
+    // --- Compendium lookup (fetches Alyx's OBR Vagabond extension bundle) ---
+
+    const COMPENDIUM_CACHE_KEY = "vagabond-pdf-exporter:compendium-cache";
+    const COMPENDIUM_TTL_MS = 24 * 60 * 60 * 1000;
+    const COMPENDIUM_HOST = "https://vagabond-extension.onrender.com";
+    let compendiumPromise = null;
+
+    function parseCompendiumEntry(s, start) {
+      let depth = 0, inStr = false, escape = false;
+      for (let i = start; i < s.length; i++) {
+        const c = s[i];
+        if (escape) { escape = false; continue; }
+        if (c === "\\") { escape = true; continue; }
+        if (c === '"') { inStr = !inStr; continue; }
+        if (inStr) continue;
+        if (c === "{") depth++;
+        else if (c === "}") { depth--; if (depth === 0) return s.slice(start, i + 1); }
+      }
+      return null;
+    }
+
+    function parseCompendium(js) {
+      const map = {};
+      for (let i = 0; i < js.length - 10; i++) {
+        if (js[i] !== "{") continue;
+        if (!js.startsWith('name:"', i + 1)) continue;
+        const entry = parseCompendiumEntry(js, i);
+        if (!entry) continue;
+        const nm = /^\{name:"((?:[^"\\]|\\.)*)"/.exec(entry);
+        if (!nm) continue;
+        const dm = /[,{]description:"((?:[^"\\]|\\.)*)"/.exec(entry);
+        if (!dm) continue;
+        let name, desc;
+        try {
+          name = JSON.parse('"' + nm[1] + '"');
+          desc = JSON.parse('"' + dm[1] + '"');
+        } catch { continue; }
+        if (!name || !desc) continue;
+        const key = String(name).toLowerCase().trim();
+        if (!map[key]) map[key] = desc;
+      }
+      return map;
+    }
+
+    async function fetchCompendium() {
+      // Discover current bundle hash from index.html (hash changes on rebuild)
+      const proxy = u => "https://corsproxy.io/?url=" + encodeURIComponent(u);
+      const indexRes = await fetch(proxy(COMPENDIUM_HOST + "/"));
+      if (!indexRes.ok) throw new Error("index HTTP " + indexRes.status);
+      const indexHtml = await indexRes.text();
+      const bundleMatch = /assets\/index-[A-Za-z0-9_-]+\.js/.exec(indexHtml);
+      if (!bundleMatch) throw new Error("couldn't find bundle in index");
+      const bundleUrl = COMPENDIUM_HOST + "/" + bundleMatch[0];
+      const bundleRes = await fetch(proxy(bundleUrl));
+      if (!bundleRes.ok) throw new Error("bundle HTTP " + bundleRes.status);
+      const js = await bundleRes.text();
+      const entries = parseCompendium(js);
+      try {
+        localStorage.setItem(COMPENDIUM_CACHE_KEY, JSON.stringify({
+          bundleUrl, fetchedAt: Date.now(), entries,
+        }));
+      } catch {}
+      return entries;
+    }
+
+    async function getCompendium() {
+      if (compendiumPromise) return compendiumPromise;
+      compendiumPromise = (async () => {
+        try {
+          const raw = localStorage.getItem(COMPENDIUM_CACHE_KEY);
+          if (raw) {
+            const cache = JSON.parse(raw);
+            if (cache?.entries && Date.now() - cache.fetchedAt < COMPENDIUM_TTL_MS) {
+              return cache.entries;
+            }
+          }
+        } catch {}
+        return await fetchCompendium();
+      })();
+      try {
+        return await compendiumPromise;
+      } catch (e) {
+        compendiumPromise = null; // allow retry next import
+        throw e;
+      }
+    }
+
+    async function enhanceWithCompendium(char) {
+      let entries;
+      try {
+        entries = await getCompendium();
+      } catch (e) {
+        console.warn("Compendium lookup unavailable:", e.message);
+        return char;
+      }
+      const lookup = name => {
+        if (!name) return "";
+        const key = String(name).toLowerCase().trim();
+        return entries[key] || "";
+      };
+      for (const id in (char.abilities || {})) {
+        const ab = char.abilities[id];
+        if (!ab.description) {
+          const hit = lookup(ab.name);
+          if (hit) ab.description = hit;
+        }
+      }
+      for (const id in (char.spells || {})) {
+        const sp = char.spells[id];
+        if (!sp.description) {
+          const hit = lookup(sp.name);
+          if (hit) sp.description = hit;
+        }
+      }
+      return char;
+    }
+
     OBR.onReady(async () => {
       await loadCharacters();
       OBR.scene.onMetadataChange(() => loadCharacters());
@@ -609,6 +726,7 @@ import OBR from "./vendor/obr-sdk.js";
     async function importVgbndCharacter(remote) {
       // Detect shape: foundry-shape has system/items; native has assignedStats
       const char = remote.system ? mapFoundryToVagabond(remote) : mapNativeToVagabond(remote);
+      await enhanceWithCompendium(char);
       const metadata = await OBR.scene.getMetadata();
       const existing = { ...(metadata[METADATA_KEY] || {}) };
       existing[char.id] = char;
@@ -630,17 +748,22 @@ import OBR from "./vendor/obr-sdk.js";
       if (e.target === e.currentTarget) closeVgbnd();
     });
 
-    const UUID_RE = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+    // Accept 8-4-4-4-12 hex with any non-hex separator (dash, en-dash, em-dash,
+    // space, underscore, none), case-insensitive. Normalized to canonical UUID.
+    const UUID_RE = /([0-9a-f]{8})[^0-9a-f]?([0-9a-f]{4})[^0-9a-f]?([0-9a-f]{4})[^0-9a-f]?([0-9a-f]{4})[^0-9a-f]?([0-9a-f]{12})/i;
 
     document.getElementById("vgbndUrlBtn").addEventListener("click", async () => {
       const input = prompt("Paste a vgbnd.app character URL or ID:");
       if (!input) return;
-      const match = UUID_RE.exec(input.trim());
+      const trimmed = input.trim();
+      const match = UUID_RE.exec(trimmed);
       if (!match) {
-        setStatus("Couldn't find a character ID in that input.", "error");
+        const preview = trimmed.length > 50 ? trimmed.slice(0, 47) + "..." : trimmed;
+        setStatus('No character ID in: "' + preview + '"', "error");
+        console.log("URL import raw input:", JSON.stringify(trimmed));
         return;
       }
-      const id = match[0];
+      const id = match.slice(1).join("-").toLowerCase();
       const btn = document.getElementById("vgbndUrlBtn");
       btn.disabled = true;
       setStatus("Fetching character...", "");
@@ -659,6 +782,7 @@ import OBR from "./vendor/obr-sdk.js";
         const body = await res.json();
         const native = body.character || body;
         const char = mapNativeToVagabond(native);
+        await enhanceWithCompendium(char);
         const metadata = await OBR.scene.getMetadata();
         const existing = { ...(metadata[METADATA_KEY] || {}) };
         existing[char.id] = char;
@@ -686,6 +810,7 @@ import OBR from "./vendor/obr-sdk.js";
           throw new Error("Not a character actor (type: " + foundry.type + ")");
         }
         const char = mapFoundryToVagabond(foundry);
+        await enhanceWithCompendium(char);
 
         const metadata = await OBR.scene.getMetadata();
         const existing = { ...(metadata[METADATA_KEY] || {}) };
