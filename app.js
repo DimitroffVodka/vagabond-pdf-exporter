@@ -715,6 +715,20 @@ import OBR from "./vendor/obr-sdk.js";
         .trim();
     }
 
+    // Cost can arrive as {g,s,c} (vgbnd native) or {gold,silver,copper} (foundry).
+    // Produce the compact display form Alyx's extension uses, e.g. "1g 60s".
+    function formatCost(v) {
+      if (!v) return "";
+      const g = Number(v.g ?? v.gold) || 0;
+      const s = Number(v.s ?? v.silver) || 0;
+      const c = Number(v.c ?? v.copper) || 0;
+      const parts = [];
+      if (g) parts.push(g + "g");
+      if (s) parts.push(s + "s");
+      if (c) parts.push(c + "c");
+      return parts.join(" ");
+    }
+
     // vgbnd.app native (Firestore) shape -> OBR Vagabond shape
     function mapNativeToVagabond(raw) {
       const base = raw.assignedStats || {};
@@ -742,23 +756,38 @@ import OBR from "./vendor/obr-sdk.js";
       let armor = 0;
       inv.forEach((it, idx) => {
         const isWeapon = it.category === "Weapon" || !!it.damage;
-        if (it.category === "Armor" && it.is_equipped && typeof it.rating === "number") {
+        const isArmor = it.category === "Armor";
+        if (isArmor && it.is_equipped && typeof it.rating === "number") {
           armor = Math.max(armor, it.rating);
         }
-        const propsDesc = Array.isArray(it.properties) && it.properties.length
-          ? it.properties.join(", ")
-          : (it.desc || "");
         const qty = Number(it.quantity) || 1;
         const id = uid();
-        inventory[id] = {
+        // Shape mirrors Alyx's character-extension item schema so the sheet
+        // renders stat badges (rating, might, cost, slots) and properties line.
+        const entry = {
           id,
           item: it.name || "",
-          damage: isWeapon ? (it.damage || "") : "",
-          description: propsDesc,
-          info: qty > 1 ? "x" + qty : "",
-          grip: isWeapon ? (it.grip || "1H") : "",
+          cost: formatCost(it.value),
+          slots: typeof it.slots === "number" ? it.slots : 0,
+          is_equipped: !!it.is_equipped,
+          quantity: qty,
+          description: it.desc || "",
           order: idx,
         };
+        if (isWeapon) {
+          entry.damage = it.damage || "";
+          entry.grip = it.grip || "1H";
+          entry.range = it.range || "";
+          if (Array.isArray(it.properties) && it.properties.length) {
+            entry.info = it.properties.join(", ");
+          }
+        }
+        if (isArmor) {
+          entry.type = it.type || "";
+          entry.rating = typeof it.rating === "number" ? it.rating : 0;
+          entry.might = typeof it.might_req === "number" ? it.might_req : 0;
+        }
+        inventory[id] = entry;
       });
 
       const abilities = {};
@@ -1045,9 +1074,13 @@ import OBR from "./vendor/obr-sdk.js";
       const inv = Object.values(char.inventory || {}).sort((a, b) => (a.order || 0) - (b.order || 0));
       inv.forEach((item, i) => {
         const isWeapon = !!item.damage;
-        let quantity = 1;
-        const m = /^x?(\d+)$/i.exec(String(item.info || "").trim());
-        if (m) quantity = parseInt(m[1], 10) || 1;
+        // New schema stores quantity directly. Fall back to old "x5" in info
+        // for characters imported before v0.3.9.
+        let quantity = Number(item.quantity) || 0;
+        if (!quantity) {
+          const m = /^x?(\d+)$/i.exec(String(item.info || "").trim());
+          quantity = m ? (parseInt(m[1], 10) || 1) : 1;
+        }
 
         const grip = (item.grip === "2H" || item.grip === "1H") ? item.grip : "1H";
 
@@ -1333,13 +1366,19 @@ import OBR from "./vendor/obr-sdk.js";
           if (i >= 3) return;
           sf("Weapon " + (i + 1), w.item || "");
           sf("Weapon Damage " + (i + 1), w.damage || "");
-          sf("Weapon Properties " + (i + 1), w.description || "");
+          // New schema stores properties line in `info`; fall back to `description`
+          // for characters imported before v0.3.9.
+          sf("Weapon Properties " + (i + 1), w.info || w.description || "");
           sd("Grip " + (i + 1), w.grip || "F");
         });
 
         gear.forEach((item, i) => {
           if (i >= 14) return;
-          const label = item.info ? item.item + " (" + item.info + ")" : item.item;
+          // Prefer explicit `quantity`; fall back to the old `info` field ("x5")
+          // for characters imported before v0.3.9.
+          const qty = Number(item.quantity) || 0;
+          const qtyTag = qty > 1 ? "x" + qty : (item.info || "");
+          const label = qtyTag ? item.item + " (" + qtyTag + ")" : item.item;
           sf("Inventory " + (i + 1), label);
         });
 
