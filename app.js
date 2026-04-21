@@ -851,6 +851,9 @@ import OBR from "./vendor/obr-sdk.js";
       const maxCastingMana = Number(ds.mana?.castingMax) || 0;
       // Vagabond: maxLuck equals the Luck stat.
       const maxLuck = stats.luck;
+      // Base speed from DEX: 25' at DEX 2-3, +5' every additional 2 DEX.
+      // Crawl and travel are computed by the sheet from this base.
+      const baseSpeed = stats.dexterity >= 2 ? 20 + 5 * Math.floor(stats.dexterity / 2) : 0;
 
       return {
         id,
@@ -859,8 +862,8 @@ import OBR from "./vendor/obr-sdk.js";
         xp: Number(raw.xp) || 0,
         ancestry: titleCase(raw.ancestry || ""),
         class: titleCase(raw.class || ""),
-        // Numeric 0 (not empty string) so the sheet doesn't NaN on arithmetic
-        speed: 0,
+        // Numeric (not empty string) so the sheet doesn't NaN on arithmetic
+        speed: baseSpeed,
         speedBonus: 0,
         size: "M",
         beingType: "Humanlike",
