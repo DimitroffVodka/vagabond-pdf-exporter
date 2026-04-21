@@ -9,7 +9,7 @@ import OBR from "./vendor/obr-sdk.js";
 
     // Bump CACHE_VERSION whenever the parser schema changes so old caches
     // don't linger on upgraded clients.
-    const COMPENDIUM_CACHE_VERSION = 2;
+    const COMPENDIUM_CACHE_VERSION = 3;
     const COMPENDIUM_CACHE_KEY = "vagabond-pdf-exporter:compendium-cache:v" + COMPENDIUM_CACHE_VERSION;
     const COMPENDIUM_TTL_MS = 24 * 60 * 60 * 1000;
     const COMPENDIUM_HOST = "https://vagabond-extension.onrender.com";
@@ -29,10 +29,40 @@ import OBR from "./vendor/obr-sdk.js";
       return null;
     }
 
+    // Unescape a raw JS string body (minus the outer quotes). Works for both
+    // double-quoted strings and template literals with no ${} interpolations.
+    function unescapeJsString(raw) {
+      return raw.replace(/\\(u[0-9a-fA-F]{4}|x[0-9a-fA-F]{2}|.)/g, (_, c) => {
+        if (c[0] === "u") return String.fromCharCode(parseInt(c.slice(1), 16));
+        if (c[0] === "x") return String.fromCharCode(parseInt(c.slice(1), 16));
+        if (c === "n") return "\n";
+        if (c === "t") return "\t";
+        if (c === "r") return "\r";
+        if (c === "b") return "\b";
+        if (c === "f") return "\f";
+        if (c === "0") return "\0";
+        return c; // \\ \" \` \' and any literal character
+      });
+    }
+
+    // Match description:"..." OR description:`...` — the bundle uses both.
+    // Template-literal description with ${} interpolation would be rare for
+    // static text; those would not match and just be skipped.
+    const DESC_DOUBLE_RE = /[,{]description:"((?:[^"\\]|\\.)*)"/;
+    const DESC_BACKTICK_RE = /[,{]description:`((?:[^`\\]|\\.)*)`/;
+
+    function extractDescription(entry) {
+      const dq = DESC_DOUBLE_RE.exec(entry);
+      if (dq) return unescapeJsString(dq[1]);
+      const bt = DESC_BACKTICK_RE.exec(entry);
+      if (bt) return unescapeJsString(bt[1]);
+      return null;
+    }
+
     function parseCompendium(js) {
       // Two pools because the bundle uses two entry shapes:
-      //   byName: {name:"...", description:"..."}  (perks, ancestry traits, class features, bestiary)
-      //   byItem: {id:N, item:"...", ..., description:"..."}  (spells, gear, weapons, alchemicals)
+      //   byName: {name:"...", description:...}       (perks, ancestry traits, class features, bestiary)
+      //   byItem: {id:N, item:"...", ..., description:...}  (spells, gear, weapons, alchemicals)
       const byName = {};
       const byItem = {};
 
@@ -52,15 +82,12 @@ import OBR from "./vendor/obr-sdk.js";
           : /^\{id:\d+,item:"((?:[^"\\]|\\.)*)"/.exec(entry);
         if (!keyMatch) continue;
 
-        const descMatch = /[,{]description:"((?:[^"\\]|\\.)*)"/.exec(entry);
-        if (!descMatch) continue;
+        const desc = extractDescription(entry);
+        if (!desc) continue;
 
-        let name, desc;
-        try {
-          name = JSON.parse('"' + keyMatch[1] + '"');
-          desc = JSON.parse('"' + descMatch[1] + '"');
-        } catch { continue; }
-        if (!name || !desc) continue;
+        let name;
+        try { name = unescapeJsString(keyMatch[1]); } catch { continue; }
+        if (!name) continue;
 
         const key = String(name).toLowerCase().trim();
         const pool = shape === "name" ? byName : byItem;
