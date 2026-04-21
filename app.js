@@ -729,8 +729,10 @@ import OBR from "./vendor/obr-sdk.js";
       return parts.join(" ");
     }
 
-    // vgbnd.app native (Firestore) shape -> OBR Vagabond shape
-    function mapNativeToVagabond(raw) {
+    // vgbnd.app native (Firestore) shape -> OBR Vagabond shape.
+    // `derived` is the optional ?format=foundry response for the same character,
+    // which supplies server-computed max values (HP, mana, casting mana).
+    function mapNativeToVagabond(raw, derived) {
       const base = raw.assignedStats || {};
       const bonus = raw.levelStats || {};
       const addStat = k => (Number(base[k]) || 0) + (Number(bonus[k]) || 0);
@@ -839,6 +841,17 @@ import OBR from "./vendor/obr-sdk.js";
 
       const wealth = raw.current_wealth || {};
       const id = uid();
+
+      // Derived max values: prefer ?format=foundry server-computed values when
+      // we have them; fall back to the current value (treating it as also the
+      // max) if the derived shape wasn't fetched.
+      const ds = derived?.system || {};
+      const maxHP = Number(ds.health?.max) || Number(raw.current_hp) || 0;
+      const maxMana = Number(ds.mana?.max) || 0;
+      const maxCastingMana = Number(ds.mana?.castingMax) || 0;
+      // Vagabond: maxLuck equals the Luck stat.
+      const maxLuck = stats.luck;
+
       return {
         id,
         name: raw.name || "Imported",
@@ -846,20 +859,25 @@ import OBR from "./vendor/obr-sdk.js";
         xp: Number(raw.xp) || 0,
         ancestry: titleCase(raw.ancestry || ""),
         class: titleCase(raw.class || ""),
-        speed: "",
-        speedBonus: "",
+        // Numeric 0 (not empty string) so the sheet doesn't NaN on arithmetic
+        speed: 0,
+        speedBonus: 0,
         size: "M",
         beingType: "Humanlike",
         stats,
         training,
         currentHP: Number(raw.current_hp) || 0,
-        maxHP: Number(raw.current_hp) || 0,
+        maxHP,
         armor,
         currentMana: Number(raw.current_mana) || 0,
-        maxMana: 0,
-        maxCastingMana: 0,
+        maxMana,
+        maxCastingMana,
         currentLuck: Number(raw.current_luck) || 0,
+        maxLuck,
         fatigue: 0,
+        // bonusSlots is an array of {value, source} bonuses — set empty so the
+        // sheet's reduce()/sum doesn't operate on undefined and render NaN.
+        bonusSlots: [],
         wealth: {
           gold: Number(wealth.g) || 0,
           silver: Number(wealth.s) || 0,
@@ -873,7 +891,26 @@ import OBR from "./vendor/obr-sdk.js";
 
     async function importVgbndCharacter(remote) {
       // Detect shape: foundry-shape has system/items; native has assignedStats
-      const char = remote.system ? mapFoundryToVagabond(remote) : mapNativeToVagabond(remote);
+      let char;
+      if (remote.system) {
+        char = mapFoundryToVagabond(remote);
+      } else {
+        // Native shape (from Firestore). Try to fetch the foundry-transformed
+        // version for server-computed max values; fall back gracefully.
+        let derived = null;
+        if (remote.id) {
+          try {
+            const url = "https://api.codetabs.com/v1/proxy?quest=" +
+              encodeURIComponent("https://www.vgbnd.app/api/characters/" + remote.id + "?format=foundry");
+            const r = await fetch(url);
+            if (r.ok) {
+              const fb = await r.json();
+              if (fb && !fb.error) derived = fb;
+            }
+          } catch {}
+        }
+        char = mapNativeToVagabond(remote, derived);
+      }
       await enhanceWithCompendium(char);
       const metadata = await OBR.scene.getMetadata();
       const existing = { ...(metadata[METADATA_KEY] || {}) };
@@ -916,20 +953,25 @@ import OBR from "./vendor/obr-sdk.js";
       btn.disabled = true;
       setStatus("Fetching character...", "");
       try {
-        // vgbnd.app doesn't send CORS headers, so we route through a public proxy.
-        // ?format=foundry drops spells, so fetch native shape and use the native mapper.
-        const targetUrl = "https://www.vgbnd.app/api/characters/" + id;
-        const proxyUrl = "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(targetUrl);
-        const res = await fetch(proxyUrl);
-        if (!res.ok) {
-          if (res.status === 403 || res.status === 404) {
+        // vgbnd.app doesn't send CORS headers, so route through a public proxy.
+        // Native endpoint has spells + full inventory; ?format=foundry adds
+        // server-computed max values (HP, mana, castingMax) that native omits.
+        // Fetch both in parallel and merge.
+        const proxyOf = u => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u);
+        const nativeUrl = "https://www.vgbnd.app/api/characters/" + id;
+        const foundryUrl = nativeUrl + "?format=foundry";
+        const [nativeRes, foundryRes] = await Promise.all([
+          fetch(proxyOf(nativeUrl)),
+          fetch(proxyOf(foundryUrl)),
+        ]);
+        if (!nativeRes.ok) {
+          if (nativeRes.status === 403 || nativeRes.status === 404) {
             throw new Error("Character is private or not found. Try signing in instead.");
           }
-          throw new Error("HTTP " + res.status + " from proxy");
+          throw new Error("HTTP " + nativeRes.status + " from proxy");
         }
-        const body = await res.json();
+        const body = await nativeRes.json();
         if (body && body.error && !body.character) {
-          // Proxy returned an error envelope instead of character data
           const msg = typeof body.error === "string"
             ? body.error
             : (body.error.message || JSON.stringify(body.error).slice(0, 120));
@@ -939,7 +981,15 @@ import OBR from "./vendor/obr-sdk.js";
         if (!native || !native.name || !native.assignedStats) {
           throw new Error("Response didn't look like a Vagabond character");
         }
-        const char = mapNativeToVagabond(native);
+        // Foundry shape is best-effort — if it fails we still have native data
+        let derived = null;
+        if (foundryRes.ok) {
+          try {
+            const fbody = await foundryRes.json();
+            if (fbody && !fbody.error) derived = fbody;
+          } catch {}
+        }
+        const char = mapNativeToVagabond(native, derived);
         await enhanceWithCompendium(char);
         const metadata = await OBR.scene.getMetadata();
         const existing = { ...(metadata[METADATA_KEY] || {}) };
