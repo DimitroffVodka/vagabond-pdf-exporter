@@ -119,7 +119,19 @@ import OBR from "./vendor/obr-sdk.js";
         // both are things looked up by display-name (perks, features, traits).
         const pool = shape === "idItem" ? byItem : byName;
         if (!pool[key]) {
-          pool[key] = { description: desc, type: extractType(entry) };
+          let type = extractType(entry);
+          // Alyx's UI renders "Type: X" under the name for byItem entries
+          // whose name is "{Category}, {Specific}" (potions, alchemicals,
+          // oils). The `type` field isn't set on those entries in the bundle
+          // — the UI derives it from the comma-prefix. Mirror that here so
+          // downstream items get a type to render.
+          if (!type && shape === "idItem") {
+            const commaIdx = name.indexOf(",");
+            if (commaIdx > 0 && commaIdx < name.length - 1) {
+              type = name.slice(0, commaIdx).trim();
+            }
+          }
+          pool[key] = { description: desc, type };
         }
       }
       return { byName, byItem };
@@ -944,18 +956,19 @@ import OBR from "./vendor/obr-sdk.js";
         currentLuck: Number(raw.current_luck) || 0,
         maxLuck,
         fatigue: 0,
-        // Fields the character extension totals into Occupied Slots — leaving
-        // any of them undefined produces NaN on the sheet.
-        rations: Number(raw.rations) || 0,
-        material: 0,
-        materials: [],
-        // bonusSlots is an array of {value, source} bonuses — set empty so the
-        // sheet's reduce()/sum doesn't operate on undefined and render NaN.
-        bonusSlots: [],
+        // bonusSlots is a numeric top-level field in Alyx's schema:
+        //   Max Slots = stats.might + bonusSlots + 8
+        bonusSlots: 0,
+        // Wealth holds coinage + a few numeric trackers. Occupied Slots is
+        // computed as sum(item.slots) + Math.floor(wealth.material / 100),
+        // so wealth.material MUST exist or the whole sum goes NaN.
         wealth: {
           gold: Number(wealth.g) || 0,
           silver: Number(wealth.s) || 0,
           copper: Number(wealth.c) || 0,
+          rations: Number(raw.rations) || 0,
+          material: 0,
+          studied: 0,
         },
         inventory,
         abilities,
