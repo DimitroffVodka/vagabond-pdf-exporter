@@ -9,7 +9,7 @@ import OBR from "./vendor/obr-sdk.js";
 
     // Bump CACHE_VERSION whenever the parser schema changes so old caches
     // don't linger on upgraded clients.
-    const COMPENDIUM_CACHE_VERSION = 3;
+    const COMPENDIUM_CACHE_VERSION = 4;
     const COMPENDIUM_CACHE_KEY = "vagabond-pdf-exporter:compendium-cache:v" + COMPENDIUM_CACHE_VERSION;
     const COMPENDIUM_TTL_MS = 24 * 60 * 60 * 1000;
     const COMPENDIUM_HOST = "https://vagabond-extension.onrender.com";
@@ -69,17 +69,23 @@ import OBR from "./vendor/obr-sdk.js";
       for (let i = 0; i < js.length - 10; i++) {
         if (js[i] !== "{") continue;
 
+        // Three known shapes:
+        //   {name:"..."}              -> bestiary / misc   -> byName
+        //   {id:N,name:"..."}         -> perks              -> byName
+        //   {id:N,item:"..."}         -> spells/gear/ancestry/class -> byItem
         let shape;
         if (js.startsWith('name:"', i + 1)) shape = "name";
-        else if (/^\{id:\d+,item:"/.test(js.slice(i, i + 32))) shape = "item";
+        else if (/^\{id:\d+,name:"/.test(js.slice(i, i + 32))) shape = "idName";
+        else if (/^\{id:\d+,item:"/.test(js.slice(i, i + 32))) shape = "idItem";
         else continue;
 
         const entry = parseCompendiumEntry(js, i);
         if (!entry) continue;
 
-        const keyMatch = shape === "name"
-          ? /^\{name:"((?:[^"\\]|\\.)*)"/.exec(entry)
-          : /^\{id:\d+,item:"((?:[^"\\]|\\.)*)"/.exec(entry);
+        let keyMatch;
+        if (shape === "name") keyMatch = /^\{name:"((?:[^"\\]|\\.)*)"/.exec(entry);
+        else if (shape === "idName") keyMatch = /^\{id:\d+,name:"((?:[^"\\]|\\.)*)"/.exec(entry);
+        else keyMatch = /^\{id:\d+,item:"((?:[^"\\]|\\.)*)"/.exec(entry);
         if (!keyMatch) continue;
 
         const desc = extractDescription(entry);
@@ -90,7 +96,9 @@ import OBR from "./vendor/obr-sdk.js";
         if (!name) continue;
 
         const key = String(name).toLowerCase().trim();
-        const pool = shape === "name" ? byName : byItem;
+        // Perks ({id,name}) and bare {name} entries share the byName pool —
+        // both are things looked up by display-name (perks, features, traits).
+        const pool = shape === "idItem" ? byItem : byName;
         if (!pool[key]) pool[key] = desc;
       }
       return { byName, byItem };
@@ -727,6 +735,27 @@ import OBR from "./vendor/obr-sdk.js";
 
       const abilities = {};
       let order = 0;
+      // Add ancestry as an ability so its description (which contains the
+      // trait list) shows up on the character sheet after compendium lookup.
+      if (raw.ancestry) {
+        const id = uid();
+        abilities[id] = {
+          id,
+          name: titleCase(raw.ancestry),
+          description: "",
+          order: order++,
+        };
+      }
+      // Class similarly carries the class description / level features.
+      if (raw.class) {
+        const id = uid();
+        abilities[id] = {
+          id,
+          name: titleCase(raw.class),
+          description: "",
+          order: order++,
+        };
+      }
       for (const perk of (raw.selected_perks || [])) {
         if (!perk?.name) continue;
         const id = uid();
