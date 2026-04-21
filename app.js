@@ -16,7 +16,7 @@ import OBR from "./vendor/obr-sdk.js";
 
     // Bump CACHE_VERSION whenever the parser schema changes so old caches
     // don't linger on upgraded clients.
-    const COMPENDIUM_CACHE_VERSION = 4;
+    const COMPENDIUM_CACHE_VERSION = 5;
     const COMPENDIUM_CACHE_KEY = "vagabond-pdf-exporter:compendium-cache:v" + COMPENDIUM_CACHE_VERSION;
     const COMPENDIUM_TTL_MS = 24 * 60 * 60 * 1000;
     const COMPENDIUM_HOST = "https://vagabond-extension.onrender.com";
@@ -66,10 +66,22 @@ import OBR from "./vendor/obr-sdk.js";
       return null;
     }
 
+    // Description:"..." OR description:`...` — already defined above.
+    // Type:"..." is a short string key on many byItem entries (alchemicals,
+    // potions) that renders as the yellow sub-line in the sheet/compendium.
+    const TYPE_RE = /[,{]type:"((?:[^"\\]|\\.)*)"/;
+    function extractType(entry) {
+      const m = TYPE_RE.exec(entry);
+      if (!m) return null;
+      try { return unescapeJsString(m[1]); } catch { return null; }
+    }
+
     function parseCompendium(js) {
       // Two pools because the bundle uses two entry shapes:
       //   byName: {name:"...", description:...}       (perks, ancestry traits, class features, bestiary)
       //   byItem: {id:N, item:"...", ..., description:...}  (spells, gear, weapons, alchemicals)
+      // Each value is { description, type } — type is only populated when the
+      // entry has one (armor categories, alchemical types, potion types).
       const byName = {};
       const byItem = {};
 
@@ -106,7 +118,9 @@ import OBR from "./vendor/obr-sdk.js";
         // Perks ({id,name}) and bare {name} entries share the byName pool —
         // both are things looked up by display-name (perks, features, traits).
         const pool = shape === "idItem" ? byItem : byName;
-        if (!pool[key]) pool[key] = desc;
+        if (!pool[key]) {
+          pool[key] = { description: desc, type: extractType(entry) };
+        }
       }
       return { byName, byItem };
     }
@@ -174,20 +188,67 @@ import OBR from "./vendor/obr-sdk.js";
       }
       const byName = pools.byName || {};
       const byItem = pools.byItem || {};
-      const lookup = (name, preferItem) => {
-        if (!name) return "";
+      // Look up returns the full entry object {description, type} or null.
+      // Tries, in order:
+      //   1. Direct match on the provided name
+      //   2. NAME_ALIASES rewrite
+      //   3. "{X} N {Y}" -> strip numeric token, try "{Y}, {X}"
+      //   4. "{X} {Y}"   -> try "{Y}, {X}"  (catches "Bladefire Oil" -> "Oil, Bladefire")
+      const pick = key => {
+        return preferItem
+          ? (byItem[key] || byName[key])
+          : (byName[key] || byItem[key]);
+      };
+      let preferItem;
+      const tryKey = key => {
+        return preferItem
+          ? (byItem[key] || byName[key])
+          : (byName[key] || byItem[key]);
+      };
+      const lookup = (name, wantItem) => {
+        if (!name) return null;
+        preferItem = !!wantItem;
         let key = String(name).toLowerCase().trim();
+
+        let hit = tryKey(key);
+        if (hit) return hit;
+
         const alias = NAME_ALIASES[key];
-        if (alias) key = String(alias).toLowerCase().trim();
-        if (preferItem) return byItem[key] || byName[key] || "";
-        return byName[key] || byItem[key] || "";
+        if (alias) {
+          hit = tryKey(String(alias).toLowerCase().trim());
+          if (hit) return hit;
+        }
+
+        // Strip single-digit rank tokens ("healing 1 potion" -> "healing potion")
+        const stripped = key
+          .replace(/\b\d+\b/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+        if (stripped && stripped !== key) {
+          hit = tryKey(stripped);
+          if (hit) return hit;
+        }
+
+        // Comma-swap last word to the front ("healing potion" -> "potion, healing")
+        const commaSwap = s => {
+          const parts = s.split(/\s+/);
+          if (parts.length < 2) return null;
+          return parts[parts.length - 1] + ", " + parts.slice(0, -1).join(" ");
+        };
+        const swap1 = commaSwap(stripped || key);
+        if (swap1) {
+          hit = tryKey(swap1);
+          if (hit) return hit;
+        }
+
+        return null;
       };
       // Abilities are perks / class features / ancestry traits -> byName pool
       for (const id in (char.abilities || {})) {
         const ab = char.abilities[id];
         if (!ab.description) {
           const hit = lookup(ab.name, false);
-          if (hit) ab.description = hit;
+          if (hit) ab.description = hit.description;
         }
       }
       // Spells live in the byItem pool ({id,item,...,description})
@@ -195,27 +256,29 @@ import OBR from "./vendor/obr-sdk.js";
         const sp = char.spells[id];
         if (!sp.description) {
           const hit = lookup(sp.name, true);
-          if (hit) sp.description = hit;
+          if (hit) sp.description = hit.description;
         }
       }
       // Inventory items live in the byItem pool.
       //   Weapons (item.damage truthy): description holds the properties list
       //     ("Brutal, Thrown") — valuable at-a-glance on the PDF, only fill
       //     if it was somehow left empty.
-      //   Gear/armor: native shape often sets a short desc ("Plate, splint.")
-      //     that shadows the longer compendium text. Prefer the compendium
-      //     description whenever we have one, otherwise keep the native desc.
+      //   Gear/armor/alchemicals: native shape often sets a short desc that
+      //     shadows the longer compendium text. Prefer the compendium
+      //     description when available.
+      //   Also: fill `type` from compendium if our mapper didn't already set it
+      //     (e.g., "Oil"/"Potion"/"Acid" alchemical categories — render as the
+      //     yellow sub-line).
       for (const id in (char.inventory || {})) {
         const it = char.inventory[id];
+        const hit = lookup(it.item, true);
+        if (!hit) continue;
         if (it.damage) {
-          if (!it.description) {
-            const hit = lookup(it.item, true);
-            if (hit) it.description = hit;
-          }
+          if (!it.description) it.description = hit.description;
         } else {
-          const hit = lookup(it.item, true);
-          if (hit) it.description = hit;
+          it.description = hit.description;
         }
+        if (!it.type && hit.type) it.type = hit.type;
       }
       return char;
     }
@@ -788,6 +851,9 @@ import OBR from "./vendor/obr-sdk.js";
           entry.type = it.type || "";
           entry.rating = typeof it.rating === "number" ? it.rating : 0;
           entry.might = typeof it.might_req === "number" ? it.might_req : 0;
+          // Alyx's extension expects `info` as the yellow sub-line; for armor
+          // the compendium convention is "Armor Rating N · Might M".
+          entry.info = "Armor Rating " + entry.rating + " \u00B7 Might " + entry.might;
         }
         inventory[id] = entry;
       });
@@ -878,6 +944,11 @@ import OBR from "./vendor/obr-sdk.js";
         currentLuck: Number(raw.current_luck) || 0,
         maxLuck,
         fatigue: 0,
+        // Fields the character extension totals into Occupied Slots — leaving
+        // any of them undefined produces NaN on the sheet.
+        rations: Number(raw.rations) || 0,
+        material: 0,
+        materials: [],
         // bonusSlots is an array of {value, source} bonuses — set empty so the
         // sheet's reduce()/sum doesn't operate on undefined and render NaN.
         bonusSlots: [],
