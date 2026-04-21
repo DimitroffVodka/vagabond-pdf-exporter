@@ -102,12 +102,20 @@ import OBR from "./vendor/obr-sdk.js";
       const indexRes = await fetch(proxy(COMPENDIUM_HOST + "/"));
       if (!indexRes.ok) throw new Error("index HTTP " + indexRes.status);
       const indexHtml = await indexRes.text();
+      // codetabs (and similar proxies) sometimes return HTTP 200 with a JSON
+      // error body when the upstream is unreachable or the quota is exceeded
+      if (indexHtml.startsWith("{") && /"error"\s*:/.test(indexHtml)) {
+        throw new Error("proxy error body: " + indexHtml.slice(0, 120));
+      }
       const bundleMatch = /assets\/index-[A-Za-z0-9_-]+\.js/.exec(indexHtml);
       if (!bundleMatch) throw new Error("couldn't find bundle in index");
       const bundleUrl = COMPENDIUM_HOST + "/" + bundleMatch[0];
       const bundleRes = await fetch(proxy(bundleUrl));
       if (!bundleRes.ok) throw new Error("bundle HTTP " + bundleRes.status);
       const js = await bundleRes.text();
+      if (js.length < 10000 && js.startsWith("{") && /"error"\s*:/.test(js)) {
+        throw new Error("proxy error body on bundle: " + js.slice(0, 120));
+      }
       const entries = parseCompendium(js);
       try {
         localStorage.setItem(COMPENDIUM_CACHE_KEY, JSON.stringify({
@@ -834,7 +842,17 @@ import OBR from "./vendor/obr-sdk.js";
           throw new Error("HTTP " + res.status + " from proxy");
         }
         const body = await res.json();
+        if (body && body.error && !body.character) {
+          // Proxy returned an error envelope instead of character data
+          const msg = typeof body.error === "string"
+            ? body.error
+            : (body.error.message || JSON.stringify(body.error).slice(0, 120));
+          throw new Error("Proxy/API error: " + msg);
+        }
         const native = body.character || body;
+        if (!native || !native.name || !native.assignedStats) {
+          throw new Error("Response didn't look like a Vagabond character");
+        }
         const char = mapNativeToVagabond(native);
         await enhanceWithCompendium(char);
         const metadata = await OBR.scene.getMetadata();
