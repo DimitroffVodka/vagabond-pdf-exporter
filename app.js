@@ -5,12 +5,36 @@ import OBR from "./vendor/obr-sdk.js";
     let characters = [];
     let selectedId = null;
 
-    // Bridge names that vgbnd.app stores differently from Alyx's OBR compendium.
-    // Keys are lowercased vgbnd.app names; values are the compendium's
-    // canonical display name. Extend as drift is discovered.
+    // Bridge names that vgbnd.app stores differently from the canonical
+    // (Alyx / VCE) compendium name. Two common cases:
+    //
+    //   Name drift — vgbnd.app and the compendium disagree on spelling:
+    //     "heightened intellect": "Heightened Reason"
+    //
+    //   Custom-content UUIDs — vgbnd.app stores user-authored custom classes,
+    //   ancestries, and perks as raw UUIDs. There is no API to resolve them
+    //   to a name, so map them here once per UUID:
+    //     "3c280e15-f63d-4be9-99f4-5fed8da47382": "Samurai"
+    //
+    // Keys are lowercased (UUIDs already are); values are the canonical display
+    // name — anything that will land in the byName pool (Alyx or VCE).
     const NAME_ALIASES = {
       "heightened intellect": "Heightened Reason",
+      // Add your custom-class UUID mappings here, e.g.:
+      // "3c280e15-f63d-4be9-99f4-5fed8da47382": "Samurai",
     };
+
+    const UUID_RE_STR = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    function resolveDisplayName(rawValue) {
+      if (!rawValue) return "";
+      const key = String(rawValue).toLowerCase().trim();
+      if (NAME_ALIASES[key]) return NAME_ALIASES[key];
+      if (UUID_RE_STR.test(key)) {
+        console.warn("Unmapped custom-content UUID (add to NAME_ALIASES):", key);
+        return "Custom (" + key.slice(0, 8) + ")";
+      }
+      return titleCase(rawValue);
+    }
 
     // --- Compendium lookup (fetches Alyx's OBR Vagabond extension bundle) ---
 
@@ -983,26 +1007,20 @@ import OBR from "./vendor/obr-sdk.js";
 
       const abilities = {};
       let order = 0;
-      // Add ancestry as an ability so its description (which contains the
-      // trait list) shows up on the character sheet after compendium lookup.
-      if (raw.ancestry) {
+      // Resolve names through NAME_ALIASES (handles Heightened-Intellect-style
+      // drift + user-mapped custom-content UUIDs). Unmapped UUIDs fall back
+      // to a friendly "Custom (<first8>)" placeholder instead of title-cased
+      // mush — see resolveDisplayName above.
+      const ancestryDisplay = resolveDisplayName(raw.ancestry);
+      const classDisplay = resolveDisplayName(raw.class);
+
+      if (ancestryDisplay) {
         const id = uid();
-        abilities[id] = {
-          id,
-          name: titleCase(raw.ancestry),
-          description: "",
-          order: order++,
-        };
+        abilities[id] = { id, name: ancestryDisplay, description: "", order: order++ };
       }
-      // Class similarly carries the class description / level features.
-      if (raw.class) {
+      if (classDisplay) {
         const id = uid();
-        abilities[id] = {
-          id,
-          name: titleCase(raw.class),
-          description: "",
-          order: order++,
-        };
+        abilities[id] = { id, name: classDisplay, description: "", order: order++ };
       }
       for (const perk of (raw.selected_perks || [])) {
         if (!perk?.name) continue;
@@ -1049,8 +1067,8 @@ import OBR from "./vendor/obr-sdk.js";
         name: raw.name || "Imported",
         level: Number(raw.level) || 1,
         xp: Number(raw.xp) || 0,
-        ancestry: titleCase(raw.ancestry || ""),
-        class: titleCase(raw.class || ""),
+        ancestry: ancestryDisplay,
+        class: classDisplay,
         // Numeric (not empty string) so the sheet doesn't NaN on arithmetic
         speed: baseSpeed,
         speedBonus: 0,
