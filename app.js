@@ -715,7 +715,12 @@ import OBR from "./vendor/obr-sdk.js";
 
     function loadVgbndSession() {
       try { return JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); }
-      catch { return null; }
+      catch (e) {
+        // Corrupt JSON, or localStorage blocked outright (third-party iframe
+        // with storage blocked). Both look identical to "never signed in".
+        console.warn("stored vgbnd session unreadable:", e.message);
+        return null;
+      }
     }
     function saveVgbndSession(s) {
       localStorage.setItem(SESSION_KEY, JSON.stringify(s));
@@ -840,6 +845,12 @@ import OBR from "./vendor/obr-sdk.js";
     // path), public REST endpoint otherwise.
     async function resolveVgbndCharacter(id) {
       const session = await vgbndGetSession();
+      // Say which path this import took. Without it, "signed out" and
+      // "signed in but Firestore refused" produce the same 403 from the
+      // public endpoint and are impossible to tell apart from the console.
+      console.log("vgbnd import:", session
+        ? "session for " + session.email + " — reading Firestore"
+        : "NO SESSION — public endpoint only, private characters will 403");
       if (session) {
         try {
           const doc = await vgbndGetCharacter(session, id);
