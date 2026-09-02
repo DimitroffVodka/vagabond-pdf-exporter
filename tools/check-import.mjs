@@ -40,6 +40,18 @@ assert.ok(native?.assignedStats, "native response has no assignedStats");
 const foundry = await get(BASE + "?format=foundry");
 assert.ok(foundry?.system, "?format=foundry response has no system block");
 
+// The signed-in import path reads this Firestore route instead of the public
+// endpoint, so private characters work. Can't exercise it without credentials,
+// but 403 (not 404) proves the collection is there and permission-gated —
+// a 404 would mean the path moved and the fallback silently took over.
+const FS_BASE =
+  "https://firestore.googleapis.com/v1/projects/vagabond-tag-along/databases/(default)/documents";
+const fs = await fetch(`${FS_BASE}/characters/${ID}`);
+assert.equal(
+  fs.status, 403,
+  `Firestore characters/{id} -> HTTP ${fs.status}, expected 403 PERMISSION_DENIED`
+);
+
 // VCE snapshots are the same-origin fallback when Alyx's bundle is unreachable.
 for (const kind of ["perks", "classes", "ancestries"]) {
   const arr = JSON.parse(await readFile(new URL(`../data/vce/${kind}.json`, import.meta.url)));

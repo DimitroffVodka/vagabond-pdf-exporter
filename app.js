@@ -819,6 +819,56 @@ import OBR from "./vendor/obr-sdk.js";
         }));
     }
 
+    // One character by document ID. Same document the list query returns, so
+    // the shape is whatever mapNativeToVagabond already handles. Unlike the
+    // public vgbnd.app REST endpoint this call is authenticated, so it reads
+    // private characters too.
+    async function vgbndGetCharacter(session, id) {
+      const res = await fetch(FS_BASE + "/characters/" + id, {
+        headers: { "Authorization": "Bearer " + session.idToken },
+      });
+      if (!res.ok) throw new Error("Firestore HTTP " + res.status);
+      const data = await res.json();
+      return { id, ...fsFields(data.fields ?? {}) };
+    }
+
+    // Resolve an ID to a native-shape character. Firestore first when signed
+    // in (authenticated, reads private characters, no third-party in the
+    // path), public REST endpoint otherwise.
+    async function resolveVgbndCharacter(id) {
+      const session = await vgbndGetSession();
+      if (session) {
+        try {
+          const doc = await vgbndGetCharacter(session, id);
+          if (doc && doc.name && doc.assignedStats) return doc;
+          console.warn("Firestore doc wasn't a character, falling back to public API");
+        } catch (e) {
+          console.warn("Firestore read failed, falling back to public API:", e.message);
+        }
+      }
+      const res = await fetch("https://www.vgbnd.app/api/characters/" + id);
+      if (!res.ok) {
+        if (res.status === 403 || res.status === 404) {
+          throw new Error(session
+            ? "Not found, and this account can't read it. Is it shared with you?"
+            : "Character is private or not found. Sign in to import it.");
+        }
+        throw new Error("HTTP " + res.status + " from vgbnd.app");
+      }
+      const body = await res.json();
+      if (body && body.error && !body.character) {
+        const msg = typeof body.error === "string"
+          ? body.error
+          : (body.error.message || JSON.stringify(body.error).slice(0, 120));
+        throw new Error("vgbnd.app error: " + msg);
+      }
+      const native = body.character || body;
+      if (!native || !native.name || !native.assignedStats) {
+        throw new Error("Response didn't look like a Vagabond character");
+      }
+      return native;
+    }
+
     function openVgbnd() {
       document.getElementById("vgbndOverlay").style.display = "flex";
       renderVgbndState();
@@ -1134,7 +1184,9 @@ import OBR from "./vendor/obr-sdk.js";
         char = mapFoundryToVagabond(remote);
       } else {
         // Native shape (from Firestore). Try to fetch the foundry-transformed
-        // version for server-computed max values; fall back gracefully.
+        // version for server-computed max values (mana max, casting max).
+        // This endpoint is public-only, so it 403s for private characters —
+        // best-effort, mapNativeToVagabond falls back to current values.
         let derived = null;
         if (remote.id) {
           try {
@@ -1190,55 +1242,7 @@ import OBR from "./vendor/obr-sdk.js";
       btn.disabled = true;
       setStatus("Fetching character...", "");
       try {
-        // vgbnd.app sends Access-Control-Allow-Origin: * — fetch it directly.
-        // Native endpoint has spells + full inventory; ?format=foundry adds
-        // server-computed max values (HP, mana, castingMax) that native omits.
-        // Fetch both in parallel and merge. allSettled so a failed foundry
-        // fetch can't reject the whole import — native alone is enough.
-        const nativeUrl = "https://www.vgbnd.app/api/characters/" + id;
-        const [nativeSettled, foundrySettled] = await Promise.allSettled([
-          fetch(nativeUrl),
-          fetch(nativeUrl + "?format=foundry"),
-        ]);
-        if (nativeSettled.status !== "fulfilled") {
-          throw new Error("Couldn't reach vgbnd.app: " + nativeSettled.reason.message);
-        }
-        const nativeRes = nativeSettled.value;
-        const foundryRes = foundrySettled.status === "fulfilled" ? foundrySettled.value : null;
-        if (!nativeRes.ok) {
-          if (nativeRes.status === 403 || nativeRes.status === 404) {
-            throw new Error("Character is private or not found. Try signing in instead.");
-          }
-          throw new Error("HTTP " + nativeRes.status + " from vgbnd.app");
-        }
-        const body = await nativeRes.json();
-        if (body && body.error && !body.character) {
-          const msg = typeof body.error === "string"
-            ? body.error
-            : (body.error.message || JSON.stringify(body.error).slice(0, 120));
-          throw new Error("vgbnd.app error: " + msg);
-        }
-        const native = body.character || body;
-        if (!native || !native.name || !native.assignedStats) {
-          throw new Error("Response didn't look like a Vagabond character");
-        }
-        // Foundry shape is best-effort — if it fails we still have native data
-        let derived = null;
-        if (foundryRes && foundryRes.ok) {
-          try {
-            const fbody = await foundryRes.json();
-            if (fbody && !fbody.error) derived = fbody;
-          } catch {}
-        }
-        const char = mapNativeToVagabond(native, derived);
-        await enhanceWithCompendium(char);
-        const metadata = await OBR.scene.getMetadata();
-        const existing = { ...(metadata[METADATA_KEY] || {}) };
-        existing[char.id] = char;
-        await OBR.scene.setMetadata({ [METADATA_KEY]: existing });
-        selectedId = char.id;
-        setStatus("Imported " + char.name, "success");
-        await loadCharacters();
+        await importVgbndCharacter(await resolveVgbndCharacter(id));
       } catch (e) {
         setStatus("Import failed: " + e.message, "error");
         console.error(e);
