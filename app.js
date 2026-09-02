@@ -783,7 +783,10 @@ import OBR from "./vendor/obr-sdk.js";
         };
         saveVgbndSession(updated);
         return updated;
-      } catch {
+      } catch (e) {
+        // Silent sign-out is indistinguishable from never having signed in,
+        // and it strands the Firestore import path on the public endpoint.
+        console.warn("vgbnd session refresh failed, signing out:", e.message);
         clearVgbndSession();
         return null;
       }
