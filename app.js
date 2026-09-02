@@ -228,10 +228,18 @@ import OBR from "./vendor/obr-sdk.js";
       return entries;
     }
 
-    async function fetchCompendium() {
-      // Discover current bundle hash from index.html (hash changes on rebuild)
+    // Alyx's bundle host pins Access-Control-Allow-Origin to www.owlbear.rodeo,
+    // so it can only be read through a proxy. Public proxies keep dying
+    // (corsproxy.io paywalled, codetabs 522), so this is best-effort: on
+    // failure we still return the committed VCE snapshots, which are
+    // same-origin and always available. Returns null if the bundle is
+    // unreachable.
+    async function fetchAlyxBundle() {
       const proxy = u => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u);
-      const indexRes = await fetch(proxy(COMPENDIUM_HOST + "/"));
+      // ponytail: fixed 6s budget per request so a dead proxy doesn't hang the
+      // import. Drop the proxy entirely if Alyx ever opens up CORS.
+      const get = u => fetch(proxy(u), { signal: AbortSignal.timeout(6000) });
+      const indexRes = await get(COMPENDIUM_HOST + "/");
       if (!indexRes.ok) throw new Error("index HTTP " + indexRes.status);
       const indexHtml = await indexRes.text();
       if (indexHtml.startsWith("{") && /"error"\s*:/.test(indexHtml)) {
@@ -240,19 +248,33 @@ import OBR from "./vendor/obr-sdk.js";
       const bundleMatch = /assets\/index-[A-Za-z0-9_-]+\.js/.exec(indexHtml);
       if (!bundleMatch) throw new Error("couldn't find bundle in index");
       const bundleUrl = COMPENDIUM_HOST + "/" + bundleMatch[0];
-      const bundleRes = await fetch(proxy(bundleUrl));
+      const bundleRes = await get(bundleUrl);
       if (!bundleRes.ok) throw new Error("bundle HTTP " + bundleRes.status);
       const js = await bundleRes.text();
       if (js.length < 10000 && js.startsWith("{") && /"error"\s*:/.test(js)) {
         throw new Error("proxy error body on bundle: " + js.slice(0, 120));
       }
-      const entries = parseCompendium(js);
-      await mergeVceContent(entries);
+      return { bundleUrl, entries: parseCompendium(js) };
+    }
+
+    async function fetchCompendium() {
+      let bundle = null;
       try {
-        localStorage.setItem(COMPENDIUM_CACHE_KEY, JSON.stringify({
-          bundleUrl, fetchedAt: Date.now(), entries,
-        }));
-      } catch {}
+        bundle = await fetchAlyxBundle();
+      } catch (e) {
+        console.warn("Alyx compendium unavailable, using VCE snapshots only:", e.message);
+      }
+      const entries = bundle ? bundle.entries : { byName: {}, byItem: {} };
+      await mergeVceContent(entries);
+      // Only cache a full result. A VCE-only fallback stays uncached so the
+      // next import retries the bundle instead of pinning the gap for 24h.
+      if (bundle) {
+        try {
+          localStorage.setItem(COMPENDIUM_CACHE_KEY, JSON.stringify({
+            bundleUrl: bundle.bundleUrl, fetchedAt: Date.now(), entries,
+          }));
+        } catch {}
+      }
       return entries;
     }
 
@@ -1116,9 +1138,8 @@ import OBR from "./vendor/obr-sdk.js";
         let derived = null;
         if (remote.id) {
           try {
-            const url = "https://api.codetabs.com/v1/proxy?quest=" +
-              encodeURIComponent("https://www.vgbnd.app/api/characters/" + remote.id + "?format=foundry");
-            const r = await fetch(url);
+            const r = await fetch(
+              "https://www.vgbnd.app/api/characters/" + remote.id + "?format=foundry");
             if (r.ok) {
               const fb = await r.json();
               if (fb && !fb.error) derived = fb;
@@ -1169,29 +1190,33 @@ import OBR from "./vendor/obr-sdk.js";
       btn.disabled = true;
       setStatus("Fetching character...", "");
       try {
-        // vgbnd.app doesn't send CORS headers, so route through a public proxy.
+        // vgbnd.app sends Access-Control-Allow-Origin: * — fetch it directly.
         // Native endpoint has spells + full inventory; ?format=foundry adds
         // server-computed max values (HP, mana, castingMax) that native omits.
-        // Fetch both in parallel and merge.
-        const proxyOf = u => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u);
+        // Fetch both in parallel and merge. allSettled so a failed foundry
+        // fetch can't reject the whole import — native alone is enough.
         const nativeUrl = "https://www.vgbnd.app/api/characters/" + id;
-        const foundryUrl = nativeUrl + "?format=foundry";
-        const [nativeRes, foundryRes] = await Promise.all([
-          fetch(proxyOf(nativeUrl)),
-          fetch(proxyOf(foundryUrl)),
+        const [nativeSettled, foundrySettled] = await Promise.allSettled([
+          fetch(nativeUrl),
+          fetch(nativeUrl + "?format=foundry"),
         ]);
+        if (nativeSettled.status !== "fulfilled") {
+          throw new Error("Couldn't reach vgbnd.app: " + nativeSettled.reason.message);
+        }
+        const nativeRes = nativeSettled.value;
+        const foundryRes = foundrySettled.status === "fulfilled" ? foundrySettled.value : null;
         if (!nativeRes.ok) {
           if (nativeRes.status === 403 || nativeRes.status === 404) {
             throw new Error("Character is private or not found. Try signing in instead.");
           }
-          throw new Error("HTTP " + nativeRes.status + " from proxy");
+          throw new Error("HTTP " + nativeRes.status + " from vgbnd.app");
         }
         const body = await nativeRes.json();
         if (body && body.error && !body.character) {
           const msg = typeof body.error === "string"
             ? body.error
             : (body.error.message || JSON.stringify(body.error).slice(0, 120));
-          throw new Error("Proxy/API error: " + msg);
+          throw new Error("vgbnd.app error: " + msg);
         }
         const native = body.character || body;
         if (!native || !native.name || !native.assignedStats) {
@@ -1199,7 +1224,7 @@ import OBR from "./vendor/obr-sdk.js";
         }
         // Foundry shape is best-effort — if it fails we still have native data
         let derived = null;
-        if (foundryRes.ok) {
+        if (foundryRes && foundryRes.ok) {
           try {
             const fbody = await foundryRes.json();
             if (fbody && !fbody.error) derived = fbody;
