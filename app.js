@@ -1133,7 +1133,10 @@ import OBR from "./vendor/obr-sdk.js";
       });
 
       const wealth = raw.current_wealth || {};
-      const id = uid();
+      // Key on the vgbnd character UUID so re-importing updates in place.
+      // A fresh uid() here meant every import added another copy to the
+      // scene, since the metadata map is keyed by this id.
+      const id = raw.id || uid();
 
       // Derived max values: prefer ?format=foundry server-computed values when
       // we have them; fall back to the current value (treating it as also the
