@@ -20,8 +20,9 @@ import OBR from "./vendor/obr-sdk.js";
     // name — anything that will land in the byName pool (Alyx or VCE).
     const NAME_ALIASES = {
       "heightened intellect": "Heightened Reason",
-      // Add your custom-class UUID mappings here, e.g.:
-      // "3c280e15-f63d-4be9-99f4-5fed8da47382": "Samurai",
+      // Custom classes/ancestries/perks, keyed by the UUID vgbnd.app stores
+      // in place of a name. Add one line per custom entry.
+      "6eb16501-c49c-42b6-91de-dc700049791b": "Monk",
     };
 
     const UUID_RE_STR = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
