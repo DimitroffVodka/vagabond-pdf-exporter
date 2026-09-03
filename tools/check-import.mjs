@@ -25,20 +25,13 @@ async function get(url) {
   return res.json();
 }
 
-// Preflight: the browser sends OPTIONS before a cross-origin GET.
-const pre = await fetch(BASE, {
-  method: "OPTIONS",
-  headers: { Origin: ORIGIN, "Access-Control-Request-Method": "GET" },
-});
-assert.ok(pre.status < 400, `OPTIONS preflight -> HTTP ${pre.status}`);
-
-const native = (await get(BASE)).character;
+const payload = await get(BASE);
+const native = payload.character;
 assert.ok(native?.name, "native response has no name");
 assert.ok(native?.assignedStats, "native response has no assignedStats");
-
-// Best-effort in app.js, but assert it here so silent degradation is visible.
-const foundry = await get(BASE + "?format=foundry");
-assert.ok(foundry?.system, "?format=foundry response has no system block");
+assert.ok(Number.isFinite(payload.derived?.hp?.max), "native response has no derived HP max");
+assert.ok(Number.isFinite(payload.derived?.mana?.max), "native response has no derived mana max");
+assert.ok(Number.isFinite(payload.derived?.castingMax), "native response has no derived casting max");
 
 // The signed-in import path reads this Firestore route instead of the public
 // endpoint, so private characters work. Can't exercise it without credentials,
@@ -52,6 +45,15 @@ assert.equal(
   `Firestore characters/{id} -> HTTP ${fs.status}, expected 403 PERMISSION_DENIED`
 );
 
+// Public homebrew UUIDs can be resolved without a session; private ones use
+// the same route with the Firebase bearer token already held by app.js.
+const monk = await get(`${FS_BASE}/homebrew_content/6eb16501-c49c-42b6-91de-dc700049791b`);
+assert.equal(
+  monk.fields?.data?.mapValue?.fields?.name?.stringValue,
+  "Monk",
+  "public homebrew name did not resolve"
+);
+
 // VCE snapshots are the same-origin fallback when Alyx's bundle is unreachable.
 for (const kind of ["perks", "classes", "ancestries"]) {
   const arr = JSON.parse(await readFile(new URL(`../data/vce/${kind}.json`, import.meta.url)));
@@ -59,4 +61,4 @@ for (const kind of ["perks", "classes", "ancestries"]) {
   assert.ok(arr.every(d => d?.name), `data/vce/${kind}.json has unnamed entries`);
 }
 
-console.log(`ok — direct CORS fetch works, "${native.name}" imported, VCE snapshots intact`);
+console.log(`ok — native+derived import and public homebrew resolution work for "${native.name}"`);

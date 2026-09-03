@@ -11,9 +11,8 @@ import OBR from "./vendor/obr-sdk.js";
     //   Name drift — vgbnd.app and the compendium disagree on spelling:
     //     "heightened intellect": "Heightened Reason"
     //
-    //   Custom-content UUIDs — vgbnd.app stores user-authored custom classes,
-    //   ancestries, and perks as raw UUIDs. There is no API to resolve them
-    //   to a name, so map them here once per UUID:
+    //   Custom-content UUIDs — imports resolve readable entries from Firestore.
+    //   Keep aliases as a fallback for private/unavailable content:
     //     "3c280e15-f63d-4be9-99f4-5fed8da47382": "Samurai"
     //
     // Keys are lowercased (UUIDs already are); values are the canonical display
@@ -841,6 +840,51 @@ import OBR from "./vendor/obr-sdk.js";
       return { id, ...fsFields(data.fields ?? {}) };
     }
 
+    async function vgbndResolveHomebrewNames(session, raw) {
+      const refs = new Map();
+      const add = value => {
+        const id = typeof value === "string" ? value.trim() : "";
+        if (UUID_RE_STR.test(id)) refs.set(id.toLowerCase(), id);
+      };
+      add(raw.class);
+      add(raw.ancestry);
+      for (const perk of (raw.selected_perks || [])) {
+        if (typeof perk === "string") add(perk);
+        else if (!perk?.name || UUID_RE_STR.test(perk.name)) add(perk?.name || perk?.id);
+      }
+      if (!refs.size) return raw;
+
+      const names = new Map(await Promise.all([...refs].map(async ([key, id]) => {
+        try {
+          const res = await fetch(FS_BASE + "/homebrew_content/" + encodeURIComponent(id), {
+            headers: session ? { "Authorization": "Bearer " + session.idToken } : {},
+          });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = fsFields((await res.json()).fields ?? {});
+          return [key, data.data?.name || ""];
+        } catch (e) {
+          console.warn("Could not resolve vgbnd homebrew content", id, e.message);
+          return [key, ""];
+        }
+      })));
+      const resolve = value => {
+        const key = typeof value === "string" ? value.trim().toLowerCase() : "";
+        return names.get(key) || (UUID_RE_STR.test(key) ? resolveDisplayName(value) : value);
+      };
+
+      return {
+        ...raw,
+        class: resolve(raw.class),
+        ancestry: resolve(raw.ancestry),
+        selected_perks: (raw.selected_perks || []).map(perk => {
+          if (typeof perk === "string") return { name: resolve(perk) };
+          const ref = UUID_RE_STR.test(perk?.name || "") ? perk.name : (!perk?.name ? perk?.id : "");
+          const name = resolve(ref);
+          return name && name !== ref ? { ...perk, name } : perk;
+        }),
+      };
+    }
+
     // Resolve an ID to a native-shape character. Firestore first when signed
     // in (authenticated, reads private characters, no third-party in the
     // path), public REST endpoint otherwise.
@@ -881,7 +925,7 @@ import OBR from "./vendor/obr-sdk.js";
       if (!native || !native.name || !native.assignedStats) {
         throw new Error("Response didn't look like a Vagabond character");
       }
-      return native;
+      return body.character ? { ...native, _derived: body.derived || null } : native;
     }
 
     function openVgbnd() {
@@ -1027,8 +1071,8 @@ import OBR from "./vendor/obr-sdk.js";
     }
 
     // vgbnd.app native (Firestore) shape -> OBR Vagabond shape.
-    // `derived` is the optional ?format=foundry response for the same character,
-    // which supplies server-computed max values (HP, mana, casting mana).
+    // `derived` is either the native API's derived block or the older
+    // ?format=foundry shape. Both supply server-computed max values.
     function mapNativeToVagabond(raw, derived) {
       const base = raw.assignedStats || {};
       const bonus = raw.levelStats || {};
@@ -1139,13 +1183,12 @@ import OBR from "./vendor/obr-sdk.js";
       // scene, since the metadata map is keyed by this id.
       const id = raw.id || uid();
 
-      // Derived max values: prefer ?format=foundry server-computed values when
-      // we have them; fall back to the current value (treating it as also the
-      // max) if the derived shape wasn't fetched.
-      const ds = derived?.system || {};
-      const maxHP = Number(ds.health?.max) || Number(raw.current_hp) || 0;
+      // Derived max values: prefer server-computed values when available; fall
+      // back to current HP when a private character has no public derived data.
+      const ds = derived?.system || derived || {};
+      const maxHP = Number(ds.health?.max ?? ds.hp?.max) || Number(raw.current_hp) || 0;
       const maxMana = Number(ds.mana?.max) || 0;
-      const maxCastingMana = Number(ds.mana?.castingMax) || 0;
+      const maxCastingMana = Number(ds.mana?.castingMax ?? ds.castingMax) || 0;
       // Vagabond: maxLuck equals the Luck stat.
       const maxLuck = stats.luck;
       // Base speed from DEX: 25' at DEX 2-3, +5' every additional 2 DEX.
@@ -1201,18 +1244,18 @@ import OBR from "./vendor/obr-sdk.js";
       if (remote.system) {
         char = mapFoundryToVagabond(remote);
       } else {
-        // Native shape (from Firestore). Try to fetch the foundry-transformed
-        // version for server-computed max values (mana max, casting max).
-        // This endpoint is public-only, so it 403s for private characters —
-        // best-effort, mapNativeToVagabond falls back to current values.
-        let derived = null;
-        if (remote.id) {
+        const session = await vgbndGetSession();
+        remote = await vgbndResolveHomebrewNames(session, remote);
+
+        // URL imports already carry the native endpoint's derived block. Raw
+        // Firestore rows need one best-effort public request for the same data.
+        let derived = remote._derived || null;
+        if (!derived && remote.id) {
           try {
-            const r = await fetch(
-              "https://www.vgbnd.app/api/characters/" + remote.id + "?format=foundry");
+            const r = await fetch("https://www.vgbnd.app/api/characters/" + remote.id);
             if (r.ok) {
-              const fb = await r.json();
-              if (fb && !fb.error) derived = fb;
+              const body = await r.json();
+              if (body && !body.error) derived = body.derived || null;
             }
           } catch {}
         }
